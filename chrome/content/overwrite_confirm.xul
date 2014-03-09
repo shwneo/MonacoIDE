@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<dialog  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+		title="Confirm file overwrite"
+		buttons="accept,cancel" 
+		buttonlabelaccept="Yes" 
+		buttonlabelcancel="No" 
+		ondialogaccept="on_confirm_overwrite()" 
+		ondialogcancel="on_cancel_create_file()"
+		onload="on_confirm_create_show()">
+<script type="text/javascript" src="chrome://WndTest/content/CreateFileDialog.js"/>
+
+<label id="overwriting_warning1" value="RRRRRRRRRRRRRRRRRRRRRRRRRRRR"/>
+<label value="overwrite it?"/>
+</dialog>

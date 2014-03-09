@@ -1,0 +1,39 @@
+[anonid="tab"] {
+	width: 110px;
+	height: 20px;
+}
+
+[anonid="tablabel"] {
+	width: 84px;
+	height: 20px;
+	text-align: center;
+	background-image: none;
+	background: transparent;
+}
+
+[anonid="tabinnerbox"] {
+	width: 110px;
+	height: 20px;
+	background-image: url('chrome://WndTest/skin/default/editor/tab_normal.png');
+	background-repeat: repeat-x;
+}
+
+[anonid="tabinnerbox"]:hover {
+	background-image: url('chrome://WndTest/skin/default/editor/tab_hover.png');
+	background-repeat: repeat-x;
+}
+
+[anonid="toolbarbutton"] {
+	-moz-appearance:none;
+	border: 0px;
+	width: 12px;
+	height: 12px;
+	background-repeat:no-repeat;
+	background-position:center;
+	background-image:url('chrome://WndTest/skin/default/editor/Close.png');
+}
+
+[anonid="toolbarbutton"]:hover {
+	background-image:url('chrome://WndTest/skin/default/editor/Close_forcus.png');
+}
+

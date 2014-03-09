@@ -1,0 +1,16 @@
+Import('Building_x86')
+Import('BUILDING_OPTIONS')
+Import('SDK_PATH')
+Import('BOOST_DIR')
+Import('MSVC_DLL_OPTIONS')
+
+Components_build = Building_x86
+Components_build.Append(CPPPATH=[SDK_PATH + '/include', SDK_PATH + '/include/nspr'])
+Components_build.Append(CXXFLAGS=['/DXP_WIN' ,'/DXP_WIN32'])
+Components_build.Append(LIBS=['xul', 'mozalloc', 'xpcomglue_s', 'tinyxml'])
+Components_build.Append(LIBPATH=[SDK_PATH + '/win32/lib'])
+
+Export('BOOST_DIR')
+Export('Components_build')
+
+SConscript(['src/nxIGlory/SConscript', 'src/nxIFerrando/SConscript', 'src/nxIForeginCaller/SConscript']) # sub-project list

@@ -1,0 +1,19 @@
+/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+ 
+ #include "nsISupports.idl"
+ #include "nsIBaseWindow.idl"
+ 
+ 
+ [scriptable, uuid(c13d16b4-3b2a-11e3-b51c-00e04c32f3ec)]
+ interface nxIGlory : nsISupports
+ {
+	attribute nsIBaseWindow baseWindow;
+	long	Add (in long a, in long b);
+	long	AttachWindow(in nsIBaseWindow window);
+	long	ResizeWindow(in long x, in long y, in long width, in long height);
+	long	CommandWindow(in long cmd, in long lparam, in long wparam);
+	long	CommandWindowWithString(in long cmd, in wstring w_str);
+ };

@@ -1,0 +1,5 @@
+content MonacoIDE content/
+
+skin MonacoIDE default  skin/default
+skin MonacoIDE default/editor skin/default/editor
+resource foo content/

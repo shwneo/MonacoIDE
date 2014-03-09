@@ -1,0 +1,12 @@
+Import('Components_build')
+Import('BOOST_DIR')
+Import('MSVC_DLL_OPTIONS')
+
+Building = Components_build.Clone()
+Building.Append(CPPPATH='.')
+Building.Append(LIBPATH='.')
+target = 'nxIFerrando' + Building['SHLIBSUFFIX']
+sources = ['nxFerrando.cpp']
+install = [target,'nxIFerrando.xpt']
+Building.SharedLibrary(target, sources)
+Building.Install('../..', install)

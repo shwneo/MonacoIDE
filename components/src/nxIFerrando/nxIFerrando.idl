@@ -1,0 +1,15 @@
+/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+ 
+ #include "nsISupports.idl"
+ #include "nsIBaseWindow.idl"
+ 
+ 
+ [scriptable, uuid(9a41d581-7f33-4ded-b053-eaf683abead4)]
+ interface nxIFerrando : nsISupports
+ {
+	 long Add(in long a, in long b);
+	 long CreateFileFromTemplate(in wstring file_path_name, in long construct_type, in wstring template_file, in wstring project_file);
+ };

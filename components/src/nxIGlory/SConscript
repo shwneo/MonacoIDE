@@ -1,0 +1,15 @@
+Import('Components_build')
+Import('BOOST_DIR')
+Import('MSVC_DLL_OPTIONS')
+
+Building = Components_build.Clone()
+Building.Append(CPPPATH='.')
+Building.Append(LIBPATH='.')
+Building.Append(CPPPATH=BOOST_DIR)
+Building.Append(LIBPATH=[BOOST_DIR + '/stage/lib']) # boost library search path
+Building.Append(CPPFLAGS=MSVC_DLL_OPTIONS)
+target = 'nxIGlory'+Building['SHLIBSUFFIX']
+sources = ['nxGlory.cpp','lexer_setting.cpp','pistachio.cpp']
+install = [target,'nxIGlory.xpt']
+Building.SharedLibrary(target, sources)
+Building.Install('../..', install)

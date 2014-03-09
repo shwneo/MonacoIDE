@@ -1,0 +1,152 @@
+<?xml version="1.0" standalone="no"?>
+
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+			xmlns:FILETYPES="http://www.general.org/file-types/rdf#"
+			xmlns:FILETEMPLATES="http://www.general.org/file-templates/rdf#">
+
+
+	<Seq about="http://www.general.org/file-types/tree-view">
+	<li>
+		<Seq FILETYPES:name="Mozilla Gecko runtime">
+		<li>
+			<Description>
+				<FILETYPES:name>XUL file</FILETYPES:name>
+				<FILETYPES:ext-name>.xul</FILETYPES:ext-name>
+				<FILETYPES:actrul>.xml</FILETYPES:actrul>
+				<FILETYPES:value>http://www.general.org/file-types/03f04453-769d-4334-a279-c9bebaf679f6</FILETYPES:value>
+				<FILETYPES:desc>This is the description of the xul files within cdata tag</FILETYPES:desc>
+			</Description>
+		</li>
+		<li>
+			<Description>
+				<FILETYPES:name>XML file</FILETYPES:name>
+				<FILETYPES:ext-name>.xml</FILETYPES:ext-name>
+				<FILETYPES:actrul>.xml</FILETYPES:actrul>
+				<FILETYPES:value>http://www.general.org/file-types/dff102ca-7eb6-4bc9-abc6-3ed589fd6c6c</FILETYPES:value>
+				<FILETYPES:desc></FILETYPES:desc>
+			</Description>
+		</li>
+		<li>
+			<Description>
+				<FILETYPES:name>Javascript</FILETYPES:name>
+				<FILETYPES:ext-name>.js</FILETYPES:ext-name>
+				<FILETYPES:actrul>.js</FILETYPES:actrul>
+				<FILETYPES:value>http://www.general.org/file-types/e3770add-6c0a-40eb-a49a-ccf3402f872e</FILETYPES:value>
+				<FILETYPES:desc></FILETYPES:desc>
+			</Description>
+		</li>
+		<li>
+			<Description>
+				<FILETYPES:name>CSS file</FILETYPES:name>
+				<FILETYPES:ext-name>.css</FILETYPES:ext-name>
+				<FILETYPES:actrul>.css</FILETYPES:actrul>
+				<FILETYPES:value>http://www.general.org/file-types/5226741f-9cff-452f-aa9c-e9f995252ffb</FILETYPES:value>
+				<FILETYPES:desc></FILETYPES:desc>
+			</Description>
+		</li>
+		</Seq>
+	</li>
+	</Seq>
+	<Seq about="http://www.general.org/file-types/03f04453-769d-4334-a279-c9bebaf679f6">
+		<li>
+			<Description>
+				<FILETEMPLATES:name>Window</FILETEMPLATES:name>
+				<FILETEMPLATES:selected>true</FILETEMPLATES:selected>
+				<FILETEMPLATES:value><![CDATA[
+<?xml version="1.0" standalone="no"?>
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+<window title="window" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+				
+</window>
+				]]></FILETEMPLATES:value>
+			</Description>
+		</li>
+		<li>
+			<Description>
+				<FILETEMPLATES:name>Dialog</FILETEMPLATES:name>
+				<FILETEMPLATES:selected>false</FILETEMPLATES:selected>
+				<FILETEMPLATES:value><![CDATA[
+<?xml version="1.0" standalone="no"?>
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+<dialog title="dialog" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+				
+</dialog>
+				]]></FILETEMPLATES:value>
+			</Description>
+		</li>
+		<li>
+			<Description>
+				<FILETEMPLATES:name>Overlay</FILETEMPLATES:name>
+				<FILETEMPLATES:selected>false</FILETEMPLATES:selected>
+				<FILETEMPLATES:value><![CDATA[
+<?xml version="1.0" standalone="no"?>
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+<overlay id="$FILENAME$" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+				
+</overlay>
+				]]></FILETEMPLATES:value>
+			</Description>
+		</li>
+		<li>
+			<Description>
+				<FILETEMPLATES:name>Blank file</FILETEMPLATES:name>
+				<FILETEMPLATES:selected>false</FILETEMPLATES:selected>
+				<FILETEMPLATES:value><![CDATA[]]></FILETEMPLATES:value>
+			</Description>
+		</li>
+	</Seq>
+	<Seq about="http://www.general.org/file-types/dff102ca-7eb6-4bc9-abc6-3ed589fd6c6c">
+		<li>
+			<Description>
+				<FILETEMPLATES:name>XBL binding</FILETEMPLATES:name>
+				<FILETEMPLATES:selected>false</FILETEMPLATES:selected>
+				<FILETEMPLATES:value><![CDATA[
+<?xml version="1.0" standalone="no"?>
+<bindings xmlns="http://www.mozilla.org/xbl"
+	xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	xmlns:xbl="http://www.mozilla.org/xbl">
+					
+</bindings>
+				]]></FILETEMPLATES:value>
+			</Description>
+		</li>
+		<li>
+			<Description>
+				<FILETEMPLATES:name>Blank file</FILETEMPLATES:name>
+				<FILETEMPLATES:selected>false</FILETEMPLATES:selected>
+				<FILETEMPLATES:value><![CDATA[[
+				<?xml version="1.0"?>
+				]]></FILETEMPLATES:value>
+			</Description>
+		</li>
+	</Seq>
+	<Seq about="http://www.general.org/file-types/e3770add-6c0a-40eb-a49a-ccf3402f872e">
+		<li>
+			<Description>
+				<FILETEMPLATES:name>Blank file</FILETEMPLATES:name>
+				<FILETEMPLATES:selected>false</FILETEMPLATES:selected>
+				<FILETEMPLATES:value><![CDATA[]]></FILETEMPLATES:value>
+			</Description>
+		</li>
+	</Seq>
+	<Seq about="http://www.general.org/file-types/5226741f-9cff-452f-aa9c-e9f995252ffb">
+		<li>
+			<Description>
+				<FILETEMPLATES:name>Blank file</FILETEMPLATES:name>
+				<FILETEMPLATES:selected>false</FILETEMPLATES:selected>
+				<FILETEMPLATES:value><![CDATA[]]></FILETEMPLATES:value>
+			</Description>
+		</li>
+		<li>
+			<Description>
+				<FILETEMPLATES:name>XBL binding Style Sheet</FILETEMPLATES:name>
+				<FILETEMPLATES:selected>false</FILETEMPLATES:selected>
+				<FILETEMPLATES:value><![CDATA[
+box.okcanclebuttons {
+	-moz-binding: url('');
+}
+			]]></FILETEMPLATES:value>
+			</Description>
+		</li>
+	</Seq>
+</RDF>

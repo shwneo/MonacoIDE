@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<global>
+	<settings>
+		<setting name="BackColor" value="#FFFFFF" />
+		<setting name="ForeColor" value="#000000" />
+		<setting name="Font-name" value="Courier" />
+		<setting name="Font-size" value=10 />
+		<setting name="Font-italic" value=false />
+		<setting name="Font-bold" value=false />
+	</settings>
+</global>
+
+<languages>
+	<language name="C/C++" file='*.c'>
+		<settings>
+			<setting name='default' style-iden=0/>
+			<setting name='string'  style-iden=6 font-name='Century' fcolor='#FF8040' />
+			<setting name='line-comment' style-iden=2 font-name='Consolas' fcolor='#008c46' />
+			<setting name='comment' style-iden=1 font-name='Consolas' fcolor='#008c46' />
+			<setting name='comment-doc' style-iden=3 font-name='Consolas' fcolor='#008c46' />
+			<setting name='number' style-iden=4 font-name='Consolas' fcolor='#FF80FF' />
+			<setting name='character' style-iden=7 font-name='Consolas' fcolor='#C00000' />
+			<setting name='preprocessor' style-iden=9 font-name='Consolas' fcolor='#0000FF' />
+			<setting name='include-files' style-iden=25 font-name='Consolas' fcolor='#804040' />
+			<setting name='operator' style-iden=10 font-name='Consolas' fcolor='#0080C0' />
+			<setting name='extra-operator' style-iden=14 font-name='Consolas' fcolor='#0080C0' />
+			<setting name='identifier' style-iden=11 font-name='Consolas' />
+			<setting name='buildin-types' style-iden=19 font-name='Consolas' fcolor='#008080' />
+			<setting name='key-words' style-iden=5 font-name='Consolas' fcolor='#0000A0' />
+		</settings>
+	</language>
+</languages>

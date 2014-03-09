@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://MonacoIDE/content/extern_binding.css"  type="text/css" ?>
+<?xml-stylesheet href="chrome://MonacoIDE/skin/drfcolor/main.css" type="text/css"?>
+<window id="main" width="800" height="600" title="MonacoIDE" onload="on_window_load()"
+xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" persist="screenX screenY width height">
+<script type="text/javascript" src="chrome://MonacoIDE/content/MonacoIDE.js"/>
+
+<toolbox >
+	<menubar id="main-menubar">
+		<menu id="file-menu" label="File">
+			<menupopup id="file-popup">
+				<menuitem label="New" oncommand="on_new_command()"/>
+				<menuitem label="Open" oncommand="on_open_command()"/>
+				<menuitem label="Save" oncommand="on_save_command()"/>
+				<menuitem label="Save as..."  oncommand="on_save_as_command()" />
+				<menuseparator/>
+				<menuitem label="Exit"/>
+			</menupopup>
+		</menu>
+		<menu id="edit-menu" label="Edit">
+			<menupopup id="edit-popup">
+				<menuitem label="Undo"/>
+				<menuitem label="Redo"/>
+			</menupopup>
+		</menu>
+	</menubar>
+</toolbox>
+
+<toolbox >
+	<toolbar>
+		<toolbarbutton id="toolbtn_new"  oncommand="on_new_command()"/>
+		<toolbarbutton id="toolbtn_open"   oncommand="on_open_command()"/>
+		<toolbarbutton id="toolbtn_save"   oncommand="on_save_command()"/>
+		<toolbarbutton id="toolbtn_save_all"  oncommand="window.alert('AAA')"/>
+		<toolbarbutton id="toolbtn_run" oncommand="on_project_run()"/>
+	</toolbar>
+</toolbox>
+
+<hbox flex="1">
+	<tree id="my-tree" flex="1"
+       datasources="rdf:files" ref="NC:FilesRoot" flags="dont-build-content" width="150">
+		<treecols>
+    		<treecol id="Name" label="Name" primary="true" flex="1"/>
+  		</treecols>
+
+    	<template>
+      		<rule>
+        		<treechildren>
+         			<treeitem uri="rdf:*">
+            			<treerow>
+             				<treecell label="rdf:http://home.netscape.com/NC-rdf#Name"/>
+            			</treerow>
+          			</treeitem>
+        		</treechildren>
+      		</rule>
+    	</template>
+	</tree>
+
+	<splitter/>
+
+	<vbox flex="10">
+		<tabbox id="t_box">
+			<tabs id="all_tabs" />
+		</tabbox>
+		<iframe id="main_frame" flex="1" style="padding:0,margin:0"></iframe>
+	</vbox>
+</hbox>
+
+<vbox>
+<richlistbox>
+  <richlistitem>
+    <description>A XUL Description! </description>
+  </richlistitem>
+  <richlistitem>
+    <description> A XUL Description! </description>
+  </richlistitem>
+</richlistbox>
+</vbox>
+
+</window>

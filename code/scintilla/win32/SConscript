@@ -1,0 +1,10 @@
+Import('Building_x86')
+Import('SCINTILLA_DIR')
+Dll_target = ['../bin/Scintilla.dll','../bin/SciLexer.dll']
+Headers    = ['../include/SciLexer.h','../include/Scintilla.h']
+Building = Building_x86.Clone();
+Building.Command(Dll_target,'','cd ' + SCINTILLA_DIR + ' && nmake /f scintilla.mak')
+INSTALL_DIR = '../../../depends/lib'
+Header_DIR  = '../../../depends/include'
+Building.Install(INSTALL_DIR, Dll_target)
+Building.Install(Header_DIR, Headers)

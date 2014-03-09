@@ -1,0 +1,4 @@
+manifest  chrome/chrome.manifest
+manifest  components/nxIGlory.manifest
+manifest  components/nxIFerrando.manifest
+manifest  components/nxIForeginCaller.manifest

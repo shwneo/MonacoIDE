@@ -1,0 +1,20 @@
+
+#toolbtn_new {
+	list-style-image: url('New_file.png');
+}
+
+#toolbtn_open {
+	list-style-image: url('Open.png');
+}
+
+#toolbtn_save {
+	list-style-image: url('Save.png');
+}
+
+#toolbtn_save_all {
+	list-style-image: url('Save_all.png');
+}
+
+#toolbtn_run {
+	list-style-image: url('Play.png');
+}

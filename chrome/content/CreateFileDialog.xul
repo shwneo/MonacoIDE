@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<?xul-overlay  href="create_gecko_file_overlay.xul"?>
+
+<dialog id="createFile" onload="on_new_xul_load()" ondialogaccept="return on_dialog_accept();"  width="500" height="320" title="New file" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+		xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+<script src="chrome://MonacoIDE/content/MonacoIDE.js" type="text/javascript"/>
+<script src="chrome://MonacoIDE/content/CreateFileDialog.js" type="text/javascript" />
+<hbox flex="1" >
+	<tree flex="1" id="fileTypeSelect"  minwidth="100" seltype="text" onselect="on_tree_selected();" datasources="chrome://MonacoIDE/content/gecko_file_types3.rdf"
+				ref="http://www.general.org/file-types/tree-view">
+		<treecols>
+			<treecol flex="1"  primary="true"/>
+		</treecols>
+
+		<template>
+			<rule>
+				<treechildren>
+					<treeitem uri="rdf:*">
+						<treerow>
+							<treecell label="rdf:http://www.general.org/file-types/rdf#name" value="rdf:http://www.general.org/file-types/rdf#value"/>
+						</treerow>
+					</treeitem>
+				</treechildren>
+			</rule>
+		</template>
+	</tree>
+	<splitter/>
+	<box flex="3" id="lang_conf_overlay_continer">
+		<box flex="1" id="create_gecko_files_overlay_options"/>
+	</box>
+</hbox>
+
+</dialog>

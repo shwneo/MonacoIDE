@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<global>
+	<system>
+		<options name="local" ref="../../options/local_options.xml"/>
+	</system>
+	<user>
+		<options name="remote options 01" ref="http://www.general.org/wordspace/options/opt01.xml"/>
+		<options name="Develop team option 01" ref="//192.168.0.130/develop01.xml"/>
+	</user>
+</global>

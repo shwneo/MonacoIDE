@@ -1,0 +1,11 @@
+box.okcancelbuttons {
+    -moz-binding: url('chrome://MonacoIDE/content/extern_bindings.xml#okcancel');
+}
+
+tabwithclosebutton {
+	-moz-binding: url('chrome://MonacoIDE/content/extern_bindings.xml#tabclose');
+}
+
+box.labeledtextbox {
+    -moz-binding: url('chrome://MonacoIDE/content/extern_bindings.xml#labeledtextbox');
+}

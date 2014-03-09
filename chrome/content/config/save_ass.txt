@@ -1,0 +1,73 @@
+#if 0
+				list<PistNodeParser> settings = p.queryList("settings.setting");
+				list<PistNodeParser>::iterator setting_itor = settings.begin();
+				cout<<"[User Lexer Style] "<<settings.size()<<" settings found"<<endl;
+				
+				while ( setting_itor != settings.end() ) {
+					PistNodeParser curr_set = *setting_itor;
+					conf_style_set_c tmp_set = global_set;
+
+					
+					PObject obj;
+					obj = curr_set.queryObject(":name");
+					tmp_set.set_style_name(obj.toString());
+
+					obj = curr_set.queryObject(":style-iden");
+					cout<<"[User Lexer Style] identy = "<<obj.toInteger()<<endl;
+					tmp_set.set_style_identy(obj.toInteger()); 
+			
+					
+					obj = curr_set.queryObject("FontName:");
+					if ( obj.is_valid() ) {
+						cout<<"[User Lexer Style] Got font-name:"<<obj.toString()<<endl;
+						tmp_set.set_style_font_name(obj.toString());
+					} else {
+						cout<<"[User Lexer Style] "<<tmp_set.get_style_name()<<" missed font-name, using \""<<tmp_set.get_style_font_name()<<"\" as default"<<endl;
+					}
+					
+					obj = curr_set.queryObject("FontSize:");
+					if ( obj.is_valid() ) {
+						cout<<"[User Lexer Style] Got font-size:"<<obj.toString()<<endl;
+						tmp_set.set_style_font_size(obj.toInteger());
+					} else {
+						cout<<"[User Lexer Style] "<<tmp_set.get_style_name()<<" missed font-size, using \""<<tmp_set.get_style_font_size()<<"\" as default"<<endl;
+					}
+					
+					obj = curr_set.queryObject("ForeColor:");
+					if ( obj.is_valid() ) {
+						cout<<"[User Lexer Style] Got font-color:"<<obj.toString()<<endl;
+						tmp_set.set_style_fgcolor(sharp_to_rgb(obj.toString()));
+					} else {
+						cout<<"[User Lexer Style] "<<tmp_set.get_style_name()<<" missed font-color, using \""<<tmp_set.get_style_fgcolor()<<"\" as default"<<endl;
+					}
+
+					obj = curr_set.queryObject("BackColor:");
+					if ( obj.is_valid() ) {
+						cout<<"[User Lexer Style] Got back-color:"<<obj.toString()<<endl;
+						tmp_set.set_style_bgcolor(sharp_to_rgb(obj.toString()));
+					} else {
+						cout<<"[User Lexer Style] "<<tmp_set.get_style_name()<<" missed back-color, using \""<<tmp_set.get_style_bgcolor()<<"\" as default"<<endl;
+					}
+
+					obj = curr_set.queryObject("FontItalic:");
+					if ( obj.is_valid() ) {
+						cout<<"[User Lexer Style] Got font italic:"<<obj.toString()<<endl;
+						tmp_set.set_style_font_italic(obj.toBoolean());
+					} else {
+						cout<<"[User Lexer Style] "<<tmp_set.get_style_name()<<" missed font italic, using \""<<tmp_set.get_style_font_italic()<<"\" as default"<<endl;
+					}
+
+					obj = curr_set.queryObject("FontBold:");
+					if ( obj.is_valid() ) {
+						cout<<"[User Lexer Style] Got font italic:"<<obj.toString()<<endl;
+						tmp_set.set_style_font_bold(obj.toBoolean());
+					} else {
+						cout<<"[User Lexer Style] "<<tmp_set.get_style_name()<<" missed font bold, using \""<<tmp_set.get_style_font_bold()<<"\" as default"<<endl;
+					}
+					c_style_languages[detected_style].lang_user_style.push_back(tmp_set);
+					
+					setting_itor++;
+				}
+				break;
+			}
+			#endif

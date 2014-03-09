@@ -1,0 +1,14 @@
+Import('Building_x86')
+Import('BOOST_DIR')
+
+Dll_target = ['stage/lib/boost_regex-vc100-mt-gd-1_47.dll',
+				'stage/lib/boost_regex-vc100-mt-1_47.dll',
+				'stage/lib/boost_random-vc100-mt-gd-1_47.dll',
+				'stage/lib/boost_random-vc100-mt-1_47.dll']
+Building = Building_x86.Clone()
+Boost_build = 'bjam --toolset=msvc --without-chrono --without-date_time --without-exception --without-filesystem\
+				 --without-graph --without-graph_parallel --without-iostreams --without-math --without-mpi\
+				  --without-program_options --without-python --without-serialization --without-signals --without-system\
+				   --without-test --without-thread --without-wave --link=static --threading=multi --runtime-link=shared\
+				    --build-type=complete'
+Building.Command(Dll_target,'','cd ' + BOOST_DIR + ' && bootstrap && ' + Boost_build)

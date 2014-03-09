@@ -1,0 +1,165 @@
+<?xml version="1.0"?>
+<bindings xmlns="http://www.mozilla.org/xbl"
+         xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	 xmlns:xbl="http://www.mozilla.org/xbl">
+	
+	<binding id="tabclose" 
+			extends="chrome://global/content/bindings/general.xml#control-item">
+		<resources>
+			<stylesheet  src="chrome://MonacoIDE/skin/default/editor/extern_style.css"/>
+		</resources>
+		<content>
+			<!--<xul:tab anonid="tab" inherits="label=title"/>-->
+			<xul:box anonid="tabinnerbox">
+			<xul:label anonid="tablabel" xbl:inherits="value=title" crop="end"/>
+			<xul:toolbarbutton anonid="toolbarbutton" xbl:inherits="onmousedown=onclosebutton"/>
+			</xul:box>
+		</content>
+		
+		<implementation implements="nsIDOMXULSelectControlItemElement, nsIAccessibleProvider">
+			<property name="accessibleType" readonly="true">
+				<getter>
+					<![CDATA[
+						return Components.interfaces.nsIAccessibleProvider.XULTab;
+					]]>
+				</getter>
+			</property>
+
+			<property name="control" readonly="true">
+				<getter>
+					<![CDATA[
+						var parent = this.parentNode;
+						if (parent instanceof Components.interfaces.nsIDOMXULSelectControlElement)
+							return parent;
+						return null;
+					]]>
+				</getter>
+			</property>
+
+			<property name="selected" readonly="true"
+				onget="return this.getAttribute('selected') == 'true';"/>
+			
+			<property name="_selected">
+				<setter>
+					<![CDATA[
+						if (val) {
+							var old_selected = this.parentNode.selectedItem;
+							if (old_selected == this)
+								return;
+							this.setAttribute("selected", "true");
+							this.inner_box.style.backgroundImage="url('chrome://MonacoIDE/skin/default/editor/tab_selected.png')";
+							if (old_selected) {
+								old_selected.inner_box.style.backgroundImage="url('chrome://MonacoIDE/skin/default/editor/tab_normal.png')";
+							}
+						}
+						else {
+							this.inner_box.style.backgroundImage="url('chrome://MonacoIDE/skin/default/editor/tab_normal.png')";
+							this.removeAttribute("selected");
+						}
+
+						if (this.previousSibling && this.previousSibling.localName == "tab") {
+							if (val)
+								this.previousSibling.setAttribute("beforeselected", "true");
+							else
+								this.previousSibling.removeAttribute("beforeselected");
+							this.removeAttribute("first-tab");
+						}
+						else
+							this.setAttribute("first-tab", "true");
+
+						if (this.nextSibling && this.nextSibling.localName == "tab") {
+							if (val)
+								this.nextSibling.setAttribute("afterselected", "true");
+							else
+								this.nextSibling.removeAttribute("afterselected");
+							this.removeAttribute("last-tab");
+						}
+						else
+							this.setAttribute("last-tab", "true");
+						return val;
+					]]>
+				</setter>
+			</property>
+
+			<property name="linkedPanel" onget="return this.getAttribute('linkedpanel')"
+                                   onset="this.setAttribute('linkedpanel', val); return val;"/>
+
+			<field name="arrowKeysShouldWrap" readonly="true">
+#ifdef XP_MACOSX
+        true
+#else
+        false
+#endif
+			</field>
+			<field name="TelemetryStopwatch" readonly="true">
+				let tmp = {};
+				Cu.import("resource://gre/modules/TelemetryStopwatch.jsm", tmp);
+				tmp.TelemetryStopwatch;
+			</field>
+			<property name="_inner_box" readonly="true">
+				<setter>
+					<![CDATA[
+						return this.inner_box;
+					]]>
+				</setter>
+			</property>
+			<field name="inner_box">
+				<![CDATA[
+					document.getAnonymousElementByAttribute(this, "anonid", "tabinnerbox");
+				]]>
+			</field>
+			<field name="preversSelected"/>
+		</implementation>
+		<handlers>
+			<handler event="mousedown" button="0">
+				<![CDATA[
+					if (this.disabled)
+						return;
+					var old_selected = this.parentNode.selectedItem;
+					if (this != old_selected) {
+						//window.alert('11111');
+						let stopwatchid = this.parentNode.getAttribute("stopwatchid");
+						if (stopwatchid) {
+							this.TelemetryStopwatch.start(stopwatchid);
+						}
+						this.parentNode._selectNewTab(this);
+						var isTabFocused = false;
+						try {
+							isTabFocused = (document.commandDispatcher.focusedElement == this);
+						} catch (e) {}
+						if (!isTabFocused) {
+							this.setAttribute("ignorefocus", "true");
+							setTimeout(function (tab) tab.removeAttribute("ignorefocus"), 0, this);
+						}
+						if (stopwatchid) {
+							this.TelemetryStopwatch.finish(stopwatchid);
+						}
+					} 
+				]]>
+			</handler>
+			<handler event="mouseover">
+				<![CDATA[
+					if (this.disabled)
+						return;
+					if (this.selected){
+					}
+					else {
+						this.inner_box.style.backgroundImage="url('chrome://MonacoIDE/skin/default/editor/tab_hover.png')";
+					}
+				]]>
+			</handler>
+			<handler event="mouseout">
+				<![CDATA[
+					if (this.disabled)
+						return;
+					if (this.selected){
+					}
+					else {
+						this.inner_box.style.backgroundImage="url('chrome://MonacoIDE/skin/default/editor/tab_normal.png')";
+					}
+				]]>
+			</handler>
+		</handlers>
+	</binding>
+
+</bindings>

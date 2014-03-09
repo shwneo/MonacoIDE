@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+
+<overlay id="create_gecko_files_overlay"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:html="http://www.w3.org/1999/xhtml">
+	<hbox id="create_gecko_files_overlay_options" flex="1" orient="vertical">
+		<vbox >
+			<groupbox>
+				<caption label="Description"/>
+				<hbox>
+				<vbox>
+				<!--<image src="gecko-logo.png"/>-->
+				<image src="file:///C:\Users\shwneo\Desktop\WndTest\chrome\content\gecko-logo.png"/>
+				</vbox>
+				<box flex="1" >
+
+					<description flex="1" id="filetype_description" />
+
+				</box>
+				</hbox>
+			</groupbox>
+		</vbox>
+		<vbox  pack="start">
+			<groupbox>
+				<caption label="Details"/>
+				<vbox>
+					<label value="Location"/>
+					<hbox>
+					<textbox id="new_file_location" flex="3" >
+						
+					</textbox>
+						<panel id="panic_about_location" width="200" height="50" style="background-image:url('bubble.png');background-color:transparent;border:none">
+							<spacer flex="2"/>
+							<hbox>
+							<spacer flex="1"/>
+							<label flex="8" value="Need a location" />
+							</hbox>
+							<spacer flex="1"/>
+						</panel>
+					<button label="browse" flex="1" oncommand="browse_a_folder()"/></hbox>
+					<spacer flex="1"/>
+					<label value="Template"/>
+					<menulist label="Bus" id="file_template_list">
+						<menupopup id="file_template_menu" datasources="chrome://WndTest/content/gecko_file_types3.rdf" ref="http://www.general.org/file-types/03f04453-769d-4334-a279-c9bebaf679f6">
+							<!--
+							<menuitem label="New template..." style="background-color:#c3c3c3" value="dd1ee540-6a34-11e3-964d-bc5ff41d0f49"/>
+							-->
+							<template>
+								<rule>
+									<menuitem  uri="rdf:*" label="rdf:http://www.general.org/file-templates/rdf#name" selected="rdf:http://www.general.org/file-templates/rdf#selected"/>
+								</rule>
+							</template>
+						</menupopup>
+					</menulist>
+					<label value="File name"/>
+					<textbox id="new_file_name"/>
+					<panel id="panic_about_name" width="200" height="50" style="background-image:url('bubble.png');background-color:transparent;border:none">
+						<spacer flex="2"/>
+						<hbox>
+							<spacer flex="1"/>
+							<label flex="8" value="Need a file name" />
+						</hbox>
+						<spacer flex="1"/>
+					</panel>
+				</vbox>
+			</groupbox>
+		</vbox>
+	</hbox>
+	
+</overlay>

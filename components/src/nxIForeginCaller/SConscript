@@ -1,0 +1,12 @@
+Import('Components_build')
+Import('BOOST_DIR')
+Import('MSVC_DLL_OPTIONS')
+
+Building = Components_build.Clone()
+Building.Append(CPPPATH='.')
+Building.Append(LIBPATH='.')
+target = 'nxIForeginCaller' + Building['SHLIBSUFFIX']
+sources = ['nxForeginCaller.cpp']
+install = [target,'nxIForeginCaller.xpt']
+Building.SharedLibrary(target, sources)
+Building.Install('../..', install)

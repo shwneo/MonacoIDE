@@ -1,0 +1,10 @@
+Import('Building_x86')
+
+TinyXML_target = 'tinyxml'
+TinyXML_Sources = ['tinystr.cpp','tinyxml.cpp', 'tinyxmlparser.cpp', 'tinyxmlerror.cpp']
+Building = Building_x86.Clone()
+Building.Append(CPPFLAGS=['/DWIN32', '/DNDEBUG', '/D_LIB'])
+Lib = Building.StaticLibrary(TinyXML_target, TinyXML_Sources)
+Header = ['tinyxml.h', 'tinystr.h']
+Building.Install('../../depends/lib', Lib)
+Building.Install('../../depends/include', Header)

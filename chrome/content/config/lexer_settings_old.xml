@@ -1,0 +1,255 @@
+<?xml version="1.0"?>
+<global>
+	<settings>
+		<setting name="global" style-iden=0>
+			<BackColor>#FFFFFF</BackColor>
+			<ForeColor>#000000</ForeColor>
+			<FontName>Courier</FontName>
+			<FontSize>10</FontSize>
+			<FontItalic>false</FontItalic>
+			<FontBold>false</FontBold>
+		</setting>
+	</settings>
+</global>
+
+
+<languages>
+	<language name="C" file="*.c">
+		<settings>
+			<setting name='default' style-iden=0>
+				<FontSize>10</FontSize>
+				<ForeColor>#FF8040</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+				<FontName>Century</FontName>
+			</setting>
+			<setting name='string' style-iden=6>
+				<FontName>Century</FontName>
+				<ForeColor>#FF8040</ForeColor> 
+				<BackColor>#FFFFFF</BackColor>
+				<FontSize>10</FontSize>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+			</setting>
+			<setting name='line comment' style-iden=2>
+				<FontName>Consolas</FontName>
+				<ForeColor>#008c46</ForeColor> 
+				<BackColor>#FFFFFF</BackColor> 
+				<FontItalic>false</FontItalic> 
+				<FontBold>false</FontBold>
+			</setting>
+			<setting name='comment' style-iden=1>
+				<FontName>Consolas</FontName>
+				<ForeColor>#008c46</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+			</setting>
+			<setting name='comment doc' style-iden=3>
+				<FontName>Consolas</FontName>
+				<ForeColor>#008c46</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+			</setting>
+			<setting name='number' style-iden=4>
+				<FontName>Consolas</FontName>
+				<ForeColor>#FF80FF</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+			</setting>
+			<setting name='character' style-iden=7>
+				<FontName>Consolas</FontName>
+				<ForeColor>#C00000</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+			</setting>
+			<setting name='preprocessor' style-iden=9 >
+				<FontName>Consolas</FontName>
+				<ForeColor>#0000FF</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+			</setting>
+			<setting name='include files' style-iden=25>
+				<FontName>Consolas</FontName>
+				<ForeColor>#804040</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+			</setting>
+			<setting name='operator' style-iden=10>
+				<FontName>Consolas</FontName>
+				<ForeColor>#0080C0</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+			</setting>
+			<setting name='extra-operator' style-iden=14>
+				<FontName>Consolas</FontName>
+				<ForeColor>#0080C0</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+			</setting>
+			<setting name='identifier' style-iden=11>
+				<FontName>Consolas</FontName>
+				<ForeColor>#000000</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+			</setting>
+			<setting name='buildin-types' style-iden=19>
+				<FontName>Consolas</FontName>
+				<ForeColor>#008080</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+			</setting>
+			<setting name='key-words' style-iden=5>
+				<FontName>Consolas</FontName> 
+				<ForeColor>#0000A0</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+			</setting>
+		</settings>
+	</language>
+	<language name="C" file="*.cpp">
+		<files>
+			<file name="c">
+				<Postfix>C</Postfix>
+				<Postfix>INL</Postfix>
+				<Postfix>INC</Postfix>
+				<KeyWords>
+					asm auto break
+					case catch class const continue
+					default do else enum export extern false for
+					goto if inline register return static struct switch
+					union volatile while
+					</KeyWords>
+			</file>
+			<file name="c++">
+				<Postfix>H</Postfix>
+				<Postfix>CPP</Postfix>
+				<Postfix>HPP</Postfix>
+				<Postfix>CXX</Postfix>
+				<KeyWords>
+					asm auto break
+					case catch class compl const const_cast continue
+					default do dynamic_cast else enum explicit export extern false for
+					friend goto if inline mutable namespace not_eq
+					operator private protected public
+					register reinterpret_cast return static static_cast struct switch
+					template this throw true try  union using "
+					virtual volatile while 
+					</KeyWords>
+			</file>
+		</files>
+		<settings>
+			<setting name='default' style-iden=0>
+				<FontSize>10</FontSize>
+				<ForeColor>#FF8040</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+				<FontName>Century</FontName>
+			</setting>
+			<setting name='string' style-iden=6>
+				<FontName>Century</FontName>
+				<ForeColor>#FF8040</ForeColor> 
+				<BackColor>#FFFFFF</BackColor> 
+				<FontSize>10</FontSize>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+			</setting>
+			<setting name='line comment' style-iden=2>
+				<FontName>Consolas</FontName>
+				<ForeColor>#008c46</ForeColor> 
+				<BackColor>#FFFFFF</BackColor> 
+				<FontItalic>false</FontItalic> 
+				<FontBold>false</FontBold>
+			</setting>
+			<setting name='comment' style-iden=1>
+				<FontName>Consolas</FontName>
+				<ForeColor>#008c46</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+			</setting>
+			<setting name='comment doc' style-iden=3>
+				<FontName>Consolas</FontName>
+				<ForeColor>#008c46</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+			</setting>
+			<setting name='number' style-iden=4>
+				<FontName>Consolas</FontName>
+				<ForeColor>#FF80FF</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+			</setting>
+			<setting name='character' style-iden=7>
+				<FontName>Consolas</FontName>
+				<ForeColor>#C00000</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+			</setting>
+			<setting name='preprocessor' style-iden=9 >
+				<FontName>Consolas</FontName>
+				<ForeColor>#0000FF</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+			</setting>
+			<setting name='include files' style-iden=25>
+				<FontName>Consolas</FontName>
+				<ForeColor>#804040</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+			</setting>
+			<setting name='operator' style-iden=10>
+				<FontName>Consolas</FontName>
+				<ForeColor>#0080C0</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+			</setting>
+			<setting name='extra-operator' style-iden=14>
+				<FontName>Consolas</FontName>
+				<ForeColor>#0080C0</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+			</setting>
+			<setting name='identifier' style-iden=11>
+				<FontName>Consolas</FontName>
+				<ForeColor>#000000</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+			</setting>
+			<setting name='buildin-types' style-iden=19>
+				<FontName>Consolas</FontName>
+				<ForeColor>#008080</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+			</setting>
+			<setting name='key-words' style-iden=5>
+				<FontName>Consolas</FontName> 
+				<ForeColor>#0000A0</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+			</setting>
+		</settings>
+	</language>
+</languages>

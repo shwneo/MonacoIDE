@@ -1,0 +1,15 @@
+/* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+ 
+ #include "nsISupports.idl"
+ #include "nsIBaseWindow.idl"
+ 
+ 
+ [scriptable, uuid(0449e1c8-ae6c-419f-acd2-ac79267649f0)]
+ interface nxIForeginCaller : nsISupports
+ {
+	 long Add(in long a, in long b);
+	 long ForeginCall(in wstring command);
+ };

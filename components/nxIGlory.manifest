@@ -1,0 +1,3 @@
+binary-component nxIGlory.dll
+interfaces nxIGlory.xpt
+category profile-after-change nxIGlory @monaco-nx.com/interfaces/nxGlory;1
