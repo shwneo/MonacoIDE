@@ -1102,6 +1102,7 @@ struct SCNotification {
 	int token;		/* SCN_MODIFIED with SC_MOD_CONTAINER */
 	int annotationLinesAdded;	/* SCN_MODIFIED with SC_MOD_CHANGEANNOTATION */
 	int updated;	/* SCN_UPDATEUI */
+	void * privData; /* private data for continer */
 };
 
 #ifdef SCI_NAMESPACE

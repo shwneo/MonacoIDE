@@ -328,6 +328,7 @@ private:
 	int sysCaretWidth;
 	int sysCaretHeight;
 	bool keysAlwaysUnicode;
+	void * privateHold;
 };
 
 HINSTANCE ScintillaWin::hInstance = 0;
@@ -744,6 +745,7 @@ UINT ScintillaWin::CodePageOfDocument() {
 }
 
 sptr_t ScintillaWin::WndProc(unsigned int iMessage, uptr_t wParam, sptr_t lParam) {
+	LPCREATESTRUCT createParamter;
 	try {
 		//Platform::DebugPrintf("S M:%x WP:%x L:%x\n", iMessage, wParam, lParam);
 		iMessage = SciMessageFromEM(iMessage);
@@ -751,6 +753,10 @@ sptr_t ScintillaWin::WndProc(unsigned int iMessage, uptr_t wParam, sptr_t lParam
 
 		case WM_CREATE:
 			ctrlID = ::GetDlgCtrlID(reinterpret_cast<HWND>(wMain.GetID()));
+			createParamter = (LPCREATESTRUCT) lParam;
+			if ( createParamter ) {
+				this->privateHold = (void*) createParamter->lpCreateParams;
+			}
 			// Get Intellimouse scroll line parameters
 			GetIntelliMouseParameters();
 			::RegisterDragDrop(MainHWND(), reinterpret_cast<IDropTarget *>(&dt));
@@ -1443,6 +1449,7 @@ int ScintillaWin::GetCtrlID() {
 void ScintillaWin::NotifyParent(SCNotification scn) {
 	scn.nmhdr.hwndFrom = MainHWND();
 	scn.nmhdr.idFrom = GetCtrlID();
+	scn.privData = this->privateHold;
 	::SendMessage(::GetParent(MainHWND()), WM_NOTIFY,
 	              GetCtrlID(), reinterpret_cast<LPARAM>(&scn));
 }
