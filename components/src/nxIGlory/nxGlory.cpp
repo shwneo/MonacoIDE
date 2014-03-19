@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <string>
+#include <iostream>
 #include <set>
 
 using namespace std;
@@ -29,11 +30,7 @@ static void * _g_current_editor_instance = NULL;
 static int (*_g_current_editor_function)(void *, int, int, int);
 static set<HWND> _g_child_wnd_set;
 
-typedef class _nxGloryPrivData {
-protected:
-	HMODULE		ngHmodule;
-	int			nInitiallStatus;
-	struct nxGloryChildren {
+struct nxGloryChildren {
 		bool	ngIsInited;
 		bool	ngIsAcitve;
 		HWND	ngHwnd;
@@ -45,7 +42,15 @@ protected:
 		void *  ngInstance;
 		HANDLE	hFile; // Handle to document
 		HHOOK	hNotifyLisstener;
-	} ngChildWindow[GLORY_MAC_CHILDREN];
+		HANDLE  hInputHelperThread;
+		HANDLE  hInputMessageSemaphore;
+};
+
+typedef class _nxGloryPrivData {
+protected:
+	HMODULE		ngHmodule;
+	int			nInitiallStatus;
+	struct nxGloryChildren ngChildWindow[GLORY_MAC_CHILDREN];
 public:
 	_nxGloryPrivData();
 	~_nxGloryPrivData(){};
@@ -59,6 +64,7 @@ public:
 	int CloseFileInChild(int n);
 	int SaveFileInChild(int n);
 	int SaveFileInActiveChildAs(const char * file_name);
+	struct nxGloryChildren * GetChildWindowByHandle(HWND wnd);
 
 	friend nxGlory;
 } nxGloryPrivData;
@@ -251,6 +257,14 @@ int _nxGloryPrivData::SaveFileInChild(int n) {
 	return 0;
 }
 
+struct nxGloryChildren * _nxGloryPrivData::GetChildWindowByHandle(HWND wnd) {
+	for (int i = 0; i < GLORY_MAC_CHILDREN; ++i) {
+		if (ngChildWindow[i].ngHwnd == wnd)
+			return &ngChildWindow[i];
+	}
+	return NULL;
+}
+
 /* Implementation file */
 NS_IMPL_ISUPPORTS1(nxGlory, nxIGlory)
 
@@ -296,6 +310,8 @@ LRESULT CALLBACK SciCallWndProc(int nCode, WPARAM wParam, LPARAM lParam ) {
 	UINT   msg_message;
 	NMHDR * lpnmhdr;
 	SCNotification* notify;
+
+	int position, margin, line_number;	
 	//printf("Hooked message received\n");
 	msgDetails = (CWPSTRUCT*)lParam;
 	if (msgDetails) {
@@ -309,11 +325,14 @@ LRESULT CALLBACK SciCallWndProc(int nCode, WPARAM wParam, LPARAM lParam ) {
 					case SCN_MARGINCLICK:
 						//printf("Scintilla margin clicked\n");
 						notify = (SCNotification*) msg_lParam;
-						const int position = notify->position;
-						const int margin = notify->margin;
-						const int line_number = SendMessage(lpnmhdr->hwndFrom, SCI_LINEFROMPOSITION, position, 0);
+						position = notify->position;
+						margin = notify->margin;
+						line_number = SendMessage(lpnmhdr->hwndFrom, SCI_LINEFROMPOSITION, position, 0);
 						//printf ("Scintilla margin clicked: position=%d, line=%d, margin=%d\n", position, line_number, margin);
 						SendMessage(lpnmhdr->hwndFrom, SCI_TOGGLEFOLD, line_number, 0);
+					break;
+					case SCN_CHARADDED:
+						printf("Char added\n");
 					break;
 				}
 			}
@@ -324,6 +343,17 @@ LRESULT CALLBACK SciCallWndProc(int nCode, WPARAM wParam, LPARAM lParam ) {
 		ret = CallNextHookEx(NULL, nCode, wParam, lParam);
 	}
 	return ret;
+}
+
+DWORD WINAPI inputHelperMessageThreadProc(LPVOID lpParameter) {
+	struct nxGloryChildren * ch_wnd = (struct nxGloryChildren*) lpParameter;
+	if ( ch_wnd && ch_wnd->hInputMessageSemaphore ) {
+		while ( ch_wnd->ngIsInited ) {
+			WaitForSingleObject(ch_wnd->hInputMessageSemaphore, INFINITE);
+			cout<<" $$$$$$$$$$$$$$$ Chedking for helper message!"<<endl;
+		}
+	}
+	return 0;
 }
 
 /* long AttachWindow (in nsIBaseWindow window); */
@@ -367,7 +397,7 @@ NS_IMETHODIMP nxGlory::AttachWindow(nsIBaseWindow *window, int32_t *_retval)
 
 	RegisterClass(&mywndclass);
 	_newWnd = CreateWindow(TEXT("Scintilla"), TEXT(""), WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_CLIPCHILDREN,
-					0,0, 100,100, _hwnd, NULL, hInstance, NULL);
+					0,0, 100,100, _hwnd, NULL, hInstance, (LPVOID)pData);
 	ShowWindow(_newWnd, SW_HIDE);
 	//UpdateWindow(_newWnd);
 	_g_child_wnd_set.insert(_newWnd);
@@ -385,6 +415,9 @@ NS_IMETHODIMP nxGlory::AttachWindow(nsIBaseWindow *window, int32_t *_retval)
 																			(HOOKPROC)SciCallWndProc,
 																			hInstance,
 																			nThreadID);
+		pData->ngChildWindow[child_idx].hInputMessageSemaphore = CreateSemaphore(NULL, 0, 255, NULL);
+		pData->ngChildWindow[child_idx].hInputHelperThread = CreateThread(NULL, 0, inputHelperMessageThreadProc, &(pData->ngChildWindow[child_idx]),
+																				0, NULL);
 		
 		if (pData->ngChildWindow[child_idx].hNotifyLisstener == NULL) {
 			printf("[error] Fail to hook message\n");

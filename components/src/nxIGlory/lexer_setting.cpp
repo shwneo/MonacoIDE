@@ -106,28 +106,28 @@ typedef struct {
 	int    lang_identy_number;
 	conf_guideline * lang_style_guide;
 	conf_guideline * lang_keywords_guide;
-	conf_style_set * lang_style_set;
+	//conf_style_set * lang_style_set;
 	conf_style_lexer_property * lang_property_set;
-	conf_style_token_list * lang_keywords[8];
+	//conf_style_token_list * lang_keywords[8];
 	list<conf_style_set_c> lang_user_style;
 	list<conf_style_keywords_c> lang_keyword_list;
 } conf_style_language;
 
 static conf_guideline conf_style_guideline_c[] = {
 	{"settings.Default", 0},
-	{"settings.String", 6},
-	{"settings.Comment", 2},
 	{"settings.Comment", 1},
+	{"settings.Comment", 2},
 	{"settings.Comment", 3},
 	{"settings.Number", 4},
+	{"settings.KeyWords", 5},
+	{"settings.String", 6},
 	{"settings.Character", 7},
 	{"settings.Preprocessor", 9},
-	{"settings.Include", 25},
 	{"settings.Operator", 10},
-	{"settings.ExtOperator", 14},
 	{"settings.Identifier", 11},
+	{"settings.ExtOperator", 14},
 	{"settings.Types", 19},
-	{"settings.KeyWords", 5},
+	{"settings.Include", 25},
 	{NULL, -1}
 };
 
@@ -138,38 +138,30 @@ static conf_guideline conf_keyword_guideline_c[] = {
 	{NULL, -1}
 };
 
-static conf_style_set cxx_default_setting[] = {
-	{"default", " ", "Courier", 10,0,0,0x000000,RGB(0xFF,0xFF,0xFF), 0},
-	{"string", " ", "Century", 10, 0,0, RGB(0xFF, 0x80, 0x40), RGB(0xFF,0xFF,0xFF), 6},
-	{"line-comment", " ", "Consolas", 10, 0,0, RGB(0x00,0x8c,0x46), RGB(0xFF,0xFF,0xFF), 2},
-	{"comment", " ", "Consolas", 10, 0,0, RGB(0x00,0x8c,0x46), RGB(0xFF,0xFF,0xFF), 1},
-	{"comment doc", " ", "Consolas", 10, 0,0, RGB(0x00,0x8c,0x46), RGB(0xFF,0xFF,0xFF), 3},
-	{"number", " ", "Consolas", 10, 0,0, RGB(0xFF,0x80,0xFF), RGB(0xFF,0xFF,0xFF), 4},
-	{"character", " ", "Consolas", 10, 0, 0, RGB(0xC0,0x00,0x00), RGB(0xFF,0xFF,0xFF), 7},
-	{"preprocessor", " ", "Consolas", 10, 0,0, RGB(0x00,0x00,0xFF), RGB(0xFF,0xFF,0xFF), 9},
-	{"include file", " ", "Consolas", 10, 0,0, RGB(0x80,0x40,0x40), RGB(0xFF,0xFF,0xFF), 25},
-	{"operator", " ", "Consolas", 10, 0,0, RGB(0x00,0x80,0xc0), RGB(0xFF,0xFF,0xFF), 10},
-	{"extra operator", " ", "Consolas", 10, 0, 0, RGB(0x00, 0x80, 0xc0), RGB(0xFF,0xFF,0xFF), 14},
-	{"identifier", " ", "Consolas", 10, 0,0, 0x000000, RGB(0xFF,0xFF,0xFF), 11},
-	{"built-in types", " ", "Consolas", 10, 0,0, RGB(0x00,0x80,0x80), RGB(0xFF,0xFF,0xFF), 19},
-	{"key words", " ", "Consolas", 10, 0,0, RGB(0x00,0x00,0xA0), RGB(0xFF,0xFF,0xFF), 5},
-	{ (char*)NULL, (char*)NULL, (char*)NULL, 0,0,0,0,0,0xFFFF},	//Must be the last one
+static conf_guideline conf_style_guideline_python[] = {
+	{"settings.Default", 0},
+	{"settings.Comment", 1},
+	{"settings.Number", 2},
+	{"settings.String", 3},
+	{"settings.Character", 4},
+	{"settings.KeyWords", 5},
+	{"settings.TripleQuoteString", 6},
+	{"settings.TripleDoubleQuoteString", 7},
+	{"settings.ClassName", 8},
+	{"settings.DefName", 9},
+	{"settings.Operator", 10},
+	{"settings.Identifier", 11},
+	{"settings.Comment", 12},
+	//{"settings.StringEOL", 13},
+	{"settings.Highlight", 14},
+	{"settings.Decorator", 15},
+	{NULL, -1}
 };
 
-static conf_style_set javascript_default_setting[] = {
-	{"default", " ", "Courier", 10,0,0,0x000000,RGB(0xFF,0xFF,0xFF), 0},
-	{"string", " ", "Consolas", 10, 0,0, RGB(0xFF, 127, 39), RGB(0xFF,0xFF,0xFF), 6},
-	{"line-comment", " ", "Consolas", 10, 0,0, RGB(0x80,0x40,0x40), RGB(0xFF,0xFF,0xFF), 2},
-	{"comment", " ", "Consolas", 10, 0,0, RGB(0x80,0x40,0x40), RGB(0xFF,0xFF,0xFF), 1},
-	{"comment doc", " ", "Consolas", 10, 0,0, RGB(0x80,0x40,0x40), RGB(0xFF,0xFF,0xFF), 3},
-	{"number", " ", "Consolas", 10, 0,0, RGB(0x80,0x80,0x0), RGB(0xFF,0xFF,0xFF), 4},
-	{"string", " ", "Consolas", 10, 0, 0, RGB(0xFF, 127, 39), RGB(0xFF,0xFF,0xFF), 7},
-	{"operator", " ", "Consolas", 10, 0,0, RGB(0x80,0x80,0xFF), RGB(0xFF,0xFF,0xFF), 10},
-	{"extra operator", " ", "Consolas", 10, 0, 0, RGB(0x00, 0x80, 0xc0), RGB(0xFF,0xFF,0xFF), 14},
-	{"identifier", " ", "Consolas", 10, 0,1, RGB(0x3F,0x49,0xA4), RGB(0xFF,0xFF,0xFF), 11},
-	{"built-in types", " ", "Consolas", 10, 0,0, RGB(0x80,0x40,0x80), RGB(0xFF,0xFF,0xFF), 19},
-	{"key words", " ", "Consolas", 10, 0,0, RGB(0x3C,0x8c,0x46), RGB(0xFF,0xFF,0xFF), 5},
-	{ (char*)NULL, (char*)NULL, (char*)NULL, 0,0,0,0,0,0xFFFF},	//Must be the last one
+static conf_guideline conf_keyword_guideline_python[] = {
+	{"KeyWords", 0},
+	{"Highlight", 1},
+	{NULL, -1}
 };
 
 static conf_style_set xml_default_setting[] = {
@@ -189,72 +181,6 @@ static conf_style_set xml_default_setting[] = {
 	{ (char*)NULL, (char*)NULL, (char*)NULL, 0,0,0,0,0,0xFFFF},	//Must be the last one
 };
 
-static conf_style_token_list cxx_keyword_token_list = {
-	"C++ key words",
-	" asm auto break " 
-	" case catch class compl const const_cast continue "
-	" default do dynamic_cast else enum explicit export extern false for "
-	" friend goto if inline mutable namespace not_eq "
-	" operator private protected public "
-	" register reinterpret_cast return static static_cast struct switch "
-	" template this throw true try  union using "
-	" virtual volatile while ",
-	0
-};
-
-static conf_style_token_list c_keyword_token_list = {
-	"c programming language key words",
-	" asm auto break "
-	" case catch class const continue "
-	" default do else enum export extern false for "
-	" goto if inline register return static struct switch "
-	" union volatile while",
-	0
-};
-
-static conf_style_token_list js_keyword_token_list = {
-	"javascript key words",
-	" var function break case delete new catch "
-	" continue default do else finally for while "
-	" if in instanceof return switch this throw "
-	" try typeof void with ",
-	0
-};
-
-static conf_style_token_list cxx_ext_operators = {
-	"c++ external operators",
-	" delete new sizeof typedef typeid typename ",
-	1
-};
-
-static conf_style_token_list c_ext_operators = {
-	"c external operators",
-	" sizeof typeof typedef ",
-	1
-};
-
-static conf_style_token_list cxx_builtin_types = {
-	"c++ build-in types",
-	" bool  float int long  short signed unsigned void wchar_t char double ",
-	3
-};
-
-static conf_style_token_list c_builtin_types = {
-	"c build-in data types",
-	" float int long short signed unsigned void wchar_t char double ",
-	3
-};
-
-static conf_style_token_list js_builtin_types = {
-	"javascript data types",
-	" abstract	boolean	byte	char	class "
-	" const	debugger	double	enum	export "
-	" extends	final	float	goto	implements "
-	" import	int	interface	long	native "
-	" package	private	protected	public	short "
-	" static	super	synchronized	throws	transient volatile ",
-	3
-};
 
 static conf_style_lexer_property cxx_lang_propertys[] = {
 	{"lexer.cpp.track.preprocessor", "0", 0, LANG_PROPERTY_TYPE_STRING},
@@ -262,10 +188,11 @@ static conf_style_lexer_property cxx_lang_propertys[] = {
 };
 
 static conf_style_language c_style_languages[] = {
-	{"C", "C|H|INC|INL", "c", SCLEX_CPP, conf_style_guideline_c, conf_keyword_guideline_c, NULL, cxx_lang_propertys, {&c_keyword_token_list, &c_ext_operators, &c_builtin_types, NULL, NULL, NULL, NULL, NULL}},
-	{"C++", "CPP|CXX|HPP|HXX", "cpp", SCLEX_CPP, conf_style_guideline_c, NULL, NULL, cxx_lang_propertys, {&cxx_keyword_token_list, &cxx_ext_operators, &cxx_builtin_types, NULL, NULL, NULL, NULL, NULL}},
-	{"javascript", "JS|JAVASCRIPT", "js", SCLEX_CPP, NULL, NULL, javascript_default_setting, cxx_lang_propertys, {&js_keyword_token_list, &js_builtin_types, NULL, NULL, NULL, NULL, NULL, NULL}},
-	{"xml", "XML|XUL|HTML|XHTML", "xml", SCLEX_XML, NULL, NULL, xml_default_setting, NULL, {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL}}
+	{"C", "C|INC|INL", "c", SCLEX_CPP, conf_style_guideline_c, conf_keyword_guideline_c, cxx_lang_propertys},
+	{"C++", "CPP|CXX|HPP|HXX|H", "cpp", SCLEX_CPP, conf_style_guideline_c, conf_keyword_guideline_c, cxx_lang_propertys},
+	{"Python", "PY|PYW", "python", SCLEX_PYTHON, conf_style_guideline_python, conf_keyword_guideline_python, NULL}
+	//{"javascript", "JS|JAVASCRIPT", "js", SCLEX_CPP, NULL, NULL, javascript_default_setting, cxx_lang_propertys, {&js_keyword_token_list, &js_builtin_types, NULL, NULL, NULL, NULL, NULL, NULL}},
+	//{"xml", "XML|XUL|HTML|XHTML", "xml", SCLEX_XML, NULL, NULL, xml_default_setting, NULL, {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL}}
 };
 
 static inline
@@ -378,6 +305,7 @@ int load_user_style_setting(const char  * user_setting) {
 				curr_guide = c_style_languages[detected_style].lang_keywords_guide;
 				while (curr_guide && curr_guide->guide_query) {
 					get_keyword_list_from_node(p, curr_guide, c_style_languages[detected_style].lang_keyword_list);
+					cout<<"EEEEEEEEEEEEEEEEEEEEEEEE"<<endl;
 					curr_guide++;
 				}
 			}
@@ -412,7 +340,7 @@ static int language_detect_and_styling(char * file_name, int inhint, style_setti
 	}
 	if (detected_style >= 0 && callback && instance) {
 		style_identy = c_style_languages[detected_style].lang_identy_number;
-		curr_set = c_style_languages[detected_style].lang_style_set;
+		//curr_set = c_style_languages[detected_style].lang_style_set;
 		callback(instance, SCI_SETLEXER, style_identy, style_identy);
 		conf_style_lexer_property * curr_property = c_style_languages[detected_style].lang_property_set;
 		while (curr_property && curr_property->property_name) {
@@ -447,7 +375,7 @@ static int language_detect_and_styling(char * file_name, int inhint, style_setti
 			callback(instance, SCI_STYLEGETITALIC, user_set_itor->get_style_identy(), (int)(user_set_itor->get_style_font_italic()));
 			user_set_itor++;
 		}
-#if 1
+#if 0
 		conf_style_token_list * curr_list;
 		for (int i = 0; i < 8; ++i) {
 			curr_list = c_style_languages[detected_style].lang_keywords[i];
@@ -459,9 +387,13 @@ static int language_detect_and_styling(char * file_name, int inhint, style_setti
 
 		list<conf_style_keywords_c>::iterator keyword_itor = c_style_languages[detected_style].lang_keyword_list.begin();
 		list<conf_style_keywords_c>::iterator keyword_end = c_style_languages[detected_style].lang_keyword_list.end();
+		cout<<"FFFFFFFFFFFFFFFFFFFFFF"<<endl;
 		while ( keyword_itor != keyword_end ) {
+			cout<<"GGGGGGGGGGGGGGGGG"<<endl;
 			conf_style_keywords_c curr_list = *keyword_itor;
 			callback(instance, SCI_SETKEYWORDS, curr_list.key_identy, (int)curr_list.keylist.c_str());
+			cout<<" *** Outputing key word list : "<<curr_list.keylist<<endl;
+			cout<<" *** as identy : "<<curr_list.key_identy<<endl;
 			++keyword_itor;
 		}
 
