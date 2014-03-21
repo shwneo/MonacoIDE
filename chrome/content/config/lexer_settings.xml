@@ -126,36 +126,20 @@
 		</settings>
 	</language>
 	<language name="C++" file="*.cpp">
-		<files>
-			<file name="c">
-				<Postfix>C</Postfix>
-				<Postfix>INL</Postfix>
-				<Postfix>INC</Postfix>
-				<KeyWords>
-					asm auto break
-					case catch class const continue
-					default do else enum export extern false for
-					goto if inline register return static struct switch
-					union volatile while
-					</KeyWords>
-			</file>
-			<file name="c++">
-				<Postfix>H</Postfix>
-				<Postfix>CPP</Postfix>
-				<Postfix>HPP</Postfix>
-				<Postfix>CXX</Postfix>
-				<KeyWords>
-					asm auto break
-					case catch class compl const const_cast continue
-					default do dynamic_cast else enum explicit export extern false for
-					friend goto if inline mutable namespace not_eq
-					operator private protected public
-					register reinterpret_cast return static static_cast struct switch
-					template this throw true try  union using "
-					virtual volatile while 
-					</KeyWords>
-			</file>
-		</files>
+		<KeyWords>
+			asm auto break
+			case catch class compl const const_cast continue
+			default do dynamic_cast else enum explicit export extern false for
+			friend goto if inline mutable namespace not_eq
+			operator private protected public
+			register reinterpret_cast return static static_cast struct switch
+			template this throw true try  union using "
+			virtual volatile while 
+		</KeyWords>
+		<ExternalOperators>sizeof typeof typedef new delete typeid typename
+		</ExternalOperators>
+		<BuiltinTypes>bool  float int long  short signed unsigned void wchar_t char double
+		</BuiltinTypes>
 		<settings>
 			<Default name='default' style-iden=0>
 				<FontSize>10</FontSize>
@@ -243,6 +227,124 @@
 				<FontItalic>false</FontItalic>
 				<FontBold>false</FontBold>
 			</KeyWords>
+		</settings>
+	</language>
+	<language name="Python" file="*.py">
+		<KeyWords>False None True and assert break class continue
+			def del elif else exec except finally for global if in is lambda
+			nonlocal not or pass raise return try while with yield
+		</KeyWords>
+		<Highlight>import from as
+		</Highlight>
+		<settings>
+			<Default name='default'>
+				<FontSize>10</FontSize>
+				<ForeColor>#FF8040</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+				<FontName>Century</FontName>
+			</Default>
+			<String name='string'>
+				<FontName>Century</FontName>
+				<ForeColor>#FF8040</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontSize>10</FontSize>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+			</String>
+			<Comment name='comment'>
+				<FontName>Consolas</FontName>
+				<ForeColor>#008c46</ForeColor> 
+				<BackColor>#FFFFFF</BackColor> 
+				<FontItalic>false</FontItalic> 
+				<FontBold>false</FontBold>
+				<FontSize>10</FontSize>
+			</Comment>
+			<Number name='number'>
+				<FontName>Consolas</FontName>
+				<ForeColor>#FF80FF</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+			</Number>
+			<Character name='character'>
+				<FontName>Consolas</FontName>
+				<ForeColor>#C00000</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+				<FontSize>10</FontSize>
+			</Character>
+			<Operator name='operator'>
+				<FontName>Consolas</FontName>
+				<ForeColor>#0080C0</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+				<FontSize>10</FontSize>
+			</Operator>
+			<Identifier name='identifier'>
+				<FontName>Consolas</FontName>
+				<ForeColor>#000000</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+				<FontSize>10</FontSize>
+			</Identifier>
+			<DefName name='DefName'>
+				<FontName>Consolas</FontName>
+				<ForeColor>#008080</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+				<FontSize>10</FontSize>
+			</DefName>
+			<ClassName name='ClassName'>
+				<FontName>Consolas</FontName>
+				<ForeColor>#008080</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+				<FontSize>10</FontSize>
+			</ClassName>
+			<TripleQuoteString name='TripleQuoteString'>
+				<FontName>Century</FontName>
+				<ForeColor>#FF8040</ForeColor> 
+				<BackColor>#FFFFFF</BackColor>
+				<FontSize>10</FontSize>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+			</TripleQuoteString>
+			<TripleDoubleQuoteString name='TripleDoubleQuoteString'>
+				<FontName>Consolas</FontName> 
+				<ForeColor>#0000A0</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+				<FontSize>10</FontSize>
+			</TripleDoubleQuoteString>
+			<Highlight name="Hightlight">
+				<FontName>Consolas</FontName> 
+				<ForeColor>#0000A0</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>true</FontItalic>
+				<FontBold>true</FontBold>
+			</Highlight>
+			<KeyWords name="Keywords">
+				<FontName>Consolas</FontName> 
+				<ForeColor>#00A0A0</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+			</KeyWords>
+			<Decorator name="Decorator">
+				<FontName>Consolas</FontName> 
+				<ForeColor>#0FA3A0</ForeColor>
+				<BackColor>#FFFFFF</BackColor>
+				<FontItalic>false</FontItalic>
+				<FontBold>false</FontBold>
+			</Decorator>
 		</settings>
 	</language>
 </languages>
