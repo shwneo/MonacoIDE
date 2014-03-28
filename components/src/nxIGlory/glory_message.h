@@ -23,6 +23,7 @@ struct lexer_message_char {
 };
 
 typedef union {
+	struct lexer_message_base __base;
 	struct lexer_message_margin __margin;
 	struct lexer_message_char   __char;
 } LexerMessage;

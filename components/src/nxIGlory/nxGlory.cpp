@@ -306,6 +306,13 @@ NS_IMETHODIMP nxGlory::Add(int32_t a, int32_t b, int32_t *_retval)
 
 LRESULT CALLBACK WndProc (HWND, UINT, WPARAM, LPARAM);
 
+static inline
+void post_message_to_helper(struct nxGloryChildren * dist, LexerMessage & msg) {
+	dist->ngMessageQueue.push(msg);
+	msg.__base.message_type = message_none;
+	ReleaseSemaphore(dist->hInputMessageSemaphore, 1, NULL);
+}
+
 LRESULT CALLBACK SciWndHookProc(int nCode, WPARAM wParam, LPARAM lParam ) {
 	LRESULT ret = 0;
 	CWPSTRUCT * msgDetails;
@@ -337,13 +344,12 @@ LRESULT CALLBACK SciWndHookProc(int nCode, WPARAM wParam, LPARAM lParam ) {
 						msg.__margin.base.message_type = message_margin;
 						msg.__margin.margin_number = notify->margin;
 						msg.__margin.edit_position = notify->position;
-						dist_wnd->ngMessageQueue.push(msg);
-						msg.__margin.base.message_type = message_none;
-						ReleaseSemaphore(dist_wnd->hInputMessageSemaphore, 1, NULL);
+						post_message_to_helper(dist_wnd, msg);
 					break;
 					case SCN_CHARADDED:
-						printf("Char added\n");
 						msg.__char.base.message_type = message_char;
+						msg.__char.added_char = notify->ch;
+						post_message_to_helper(dist_wnd, msg);
 					break;
 				}
 			}
@@ -356,10 +362,25 @@ LRESULT CALLBACK SciWndHookProc(int nCode, WPARAM wParam, LPARAM lParam ) {
 	return ret;
 }
 
+static inline
+bool _is_alpha(char c) {
+	if ( (c >= 'A' && c <= 'Z') ||
+		 (c >= 'a' && c <= 'z') ||
+		 (c >= '0' && c <= '9') ||
+		 (c == '_') )
+		return true;
+	return false;
+}
+
+#define LINE_BUFFER_LENGHT sizeof(char) * 512
 DWORD WINAPI inputHelperMessageThreadProc(LPVOID lpParameter) {
 	int line_number;
+	int line_pos, page_pos, startword;
+	char ch, *curr_word;
+	char * line_buffer = NULL;
 	struct nxGloryChildren * ch_wnd = (struct nxGloryChildren*) lpParameter;
 	if ( ch_wnd && ch_wnd->hInputMessageSemaphore ) {
+		line_buffer = (char*) malloc(LINE_BUFFER_LENGHT);
 		while ( ch_wnd->ngIsInited ) {
 			WaitForSingleObject(ch_wnd->hInputMessageSemaphore, INFINITE);
 			cout<<" $$$$$$$$$$$$$$$ Chedking for helper message!"<<endl;
@@ -368,13 +389,27 @@ DWORD WINAPI inputHelperMessageThreadProc(LPVOID lpParameter) {
 			switch ( pMsg->message_type ) {
 				case message_margin:
 				cout<<"Message thread reciving margin message"<<endl;
-				line_number = ch_wnd->ngCommand(ch_wnd->ngInstance, SCI_LINEFROMPOSITION, msg.__margin.edit_position, 0);
+				line_number = ch_wnd->ngCommand(ch_wnd->ngInstance, SCI_TOGGLEFOLD, msg.__margin.edit_position, 0);
 				ch_wnd->ngCommand(ch_wnd->ngInstance, SCI_TOGGLEFOLD, line_number, 0);
+				break;
+			case message_char:
+				ch = msg.__char.added_char;
+				//cout<<"Char "<<ch<<" added"<<endl;
+				line_pos = ch_wnd->ngCommand(ch_wnd->ngInstance, SCI_GETCURLINE, LINE_BUFFER_LENGHT, (int)line_buffer);
+				page_pos = ch_wnd->ngCommand(ch_wnd->ngInstance, SCI_GETCURRENTPOS, 0, 0);
+				startword = line_pos - 1;
+				while ( startword > 0 &&  _is_alpha(line_buffer[startword - 1]))
+					startword--;
+				line_buffer[ line_pos - 1 ] = '\0';
+				curr_word = line_buffer + startword;
+				cout<<"current editing word = "<<curr_word<<endl;
 				break;
 			}
 			ch_wnd->ngMessageQueue.pop();
 		}
 	}
+	if ( line_buffer )
+		free(line_buffer);
 	return 0;
 }
 
