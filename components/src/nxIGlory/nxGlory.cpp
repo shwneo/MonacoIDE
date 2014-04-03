@@ -41,6 +41,8 @@ struct nxGloryChildren {
 		string	ngFileName; //e.g Hello.cpp
 		string	ngExtName;  //e.g cpp
 		char *  local_buffer;
+		const char *  autoc_buffer;
+		void * autoc_priv;
 		int (*ngCommand)(void*,int,int,int);
 		void *  ngInstance;
 		HWND	ngHwnd;
@@ -269,6 +271,17 @@ struct nxGloryChildren * _nxGloryPrivData::GetChildWindowByHandle(HWND wnd) {
 	return NULL;
 }
 
+static inline
+bool _is_alpha(char c) {
+	if ( (c >= 'A' && c <= 'Z') ||
+		 (c >= 'a' && c <= 'z') ||
+		 (c >= '0' && c <= '9') ||
+		 (c == '_') )
+		return true;
+	return false;
+}
+
+
 /* Implementation file */
 NS_IMPL_ISUPPORTS1(nxGlory, nxIGlory)
 
@@ -313,6 +326,43 @@ void post_message_to_helper(struct nxGloryChildren * dist, LexerMessage & msg) {
 	ReleaseSemaphore(dist->hInputMessageSemaphore, 1, NULL);
 }
 
+
+
+
+static
+bool show_auto_complete(struct nxGloryChildren * dist_wnd, char ch) {
+	string * autoc_str;
+	char linebuf[512];
+	int current = dist_wnd->ngCommand(dist_wnd->ngInstance, SCI_GETCURLINE, 512, int(linebuf));
+	int pos = dist_wnd->ngCommand(dist_wnd->ngInstance, SCI_GETCURRENTPOS, 0, 0);
+	int startword = current - 1;
+	while ( startword > 0 && _is_alpha(linebuf[startword - 1]) ) {
+		--startword;
+	}
+	linebuf[current - 1] = '\0';
+	string curr_word(linebuf + startword);
+	switch ( ch ) {
+		case ' ':
+		if ( curr_word.compare("import") == 0 ||
+			 curr_word.compare("from") == 0 ) {
+			autoc_str = new string();
+			autoc_str->append("abc ");
+			autoc_str->append("abcde ");
+			autoc_str->append("bcdef ");
+			autoc_str->append("ffeddff");
+			dist_wnd->autoc_buffer = autoc_str->c_str();
+			dist_wnd->autoc_priv = (void*)autoc_str;
+			return true;
+		}
+		break;
+		case '\n':
+			return false;
+		break;
+	}
+
+	return false;
+}
+
 LRESULT CALLBACK SciWndHookProc(int nCode, WPARAM wParam, LPARAM lParam ) {
 	LRESULT ret = 0;
 	CWPSTRUCT * msgDetails;
@@ -323,6 +373,8 @@ LRESULT CALLBACK SciWndHookProc(int nCode, WPARAM wParam, LPARAM lParam ) {
 	SCNotification* notify;
 	nxGloryPrivData * privData = NULL;
 	struct nxGloryChildren * dist_wnd;
+	int enterd = 0;
+	string * autoc_priv;
 	LexerMessage msg;
 
 	int position, margin, line_number;	
@@ -350,7 +402,24 @@ LRESULT CALLBACK SciWndHookProc(int nCode, WPARAM wParam, LPARAM lParam ) {
 						msg.__char.base.message_type = message_char;
 						msg.__char.added_char = notify->ch;
 						post_message_to_helper(dist_wnd, msg);
+						/* Alas, the auto complete window must be shown here */
+						if ( show_auto_complete(dist_wnd, notify->ch) ) {
+							dist_wnd->ngCommand(dist_wnd->ngInstance, SCI_AUTOCSETMAXHEIGHT, 5, 5);
+							dist_wnd->ngCommand(dist_wnd->ngInstance, SCI_AUTOCSHOW, enterd, int(dist_wnd->autoc_buffer));
+							enterd++;
+						} else {
+							enterd = 0;
+						}
 					break;
+					case SCN_AUTOCSELECTION:
+					case SCN_AUTOCCANCELLED:
+						autoc_priv = (string*)dist_wnd->autoc_priv;
+						free(autoc_priv);
+						enterd = 0;
+						break;
+					case SCN_AUTOCCHARDELETED:
+						enterd--;
+						break;
 				}
 			}
 		}
@@ -362,25 +431,14 @@ LRESULT CALLBACK SciWndHookProc(int nCode, WPARAM wParam, LPARAM lParam ) {
 	return ret;
 }
 
-static inline
-bool _is_alpha(char c) {
-	if ( (c >= 'A' && c <= 'Z') ||
-		 (c >= 'a' && c <= 'z') ||
-		 (c >= '0' && c <= '9') ||
-		 (c == '_') )
-		return true;
-	return false;
-}
 
-#define LINE_BUFFER_LENGHT sizeof(char) * 512
 DWORD WINAPI inputHelperMessageThreadProc(LPVOID lpParameter) {
 	int line_number;
 	int line_pos, page_pos, startword;
 	char ch, *curr_word;
-	char * line_buffer = NULL;
 	struct nxGloryChildren * ch_wnd = (struct nxGloryChildren*) lpParameter;
 	if ( ch_wnd && ch_wnd->hInputMessageSemaphore ) {
-		line_buffer = (char*) malloc(LINE_BUFFER_LENGHT);
+
 		while ( ch_wnd->ngIsInited ) {
 			WaitForSingleObject(ch_wnd->hInputMessageSemaphore, INFINITE);
 			cout<<" $$$$$$$$$$$$$$$ Chedking for helper message!"<<endl;
@@ -392,24 +450,11 @@ DWORD WINAPI inputHelperMessageThreadProc(LPVOID lpParameter) {
 				line_number = ch_wnd->ngCommand(ch_wnd->ngInstance, SCI_TOGGLEFOLD, msg.__margin.edit_position, 0);
 				ch_wnd->ngCommand(ch_wnd->ngInstance, SCI_TOGGLEFOLD, line_number, 0);
 				break;
-			case message_char:
-				ch = msg.__char.added_char;
-				//cout<<"Char "<<ch<<" added"<<endl;
-				line_pos = ch_wnd->ngCommand(ch_wnd->ngInstance, SCI_GETCURLINE, LINE_BUFFER_LENGHT, (int)line_buffer);
-				page_pos = ch_wnd->ngCommand(ch_wnd->ngInstance, SCI_GETCURRENTPOS, 0, 0);
-				startword = line_pos - 1;
-				while ( startword > 0 &&  _is_alpha(line_buffer[startword - 1]))
-					startword--;
-				line_buffer[ line_pos - 1 ] = '\0';
-				curr_word = line_buffer + startword;
-				cout<<"current editing word = "<<curr_word<<endl;
-				break;
 			}
 			ch_wnd->ngMessageQueue.pop();
 		}
 	}
-	if ( line_buffer )
-		free(line_buffer);
+
 	return 0;
 }
 
