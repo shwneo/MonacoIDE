@@ -7,6 +7,8 @@
 #include "Scintilla.h"
 #include "SciLexer.h"
 #include "pistachio.h"
+#include "glory_autoc.h"
+#include "glory_window.h"
 
 using namespace std;
 using namespace boost;
@@ -109,6 +111,8 @@ typedef struct {
 	//conf_style_set * lang_style_set;
 	conf_style_lexer_property * lang_property_set;
 	//conf_style_token_list * lang_keywords[8];
+	AutoCompleteManager * (*create_autoc_manager)(struct nxGloryChildren *);
+
 	list<conf_style_set_c> lang_user_style;
 	list<conf_style_keywords_c> lang_keyword_list;
 } conf_style_language;
@@ -188,9 +192,9 @@ static conf_style_lexer_property cxx_lang_propertys[] = {
 };
 
 static conf_style_language c_style_languages[] = {
-	{"C", "C|INC|INL", "c", SCLEX_CPP, conf_style_guideline_c, conf_keyword_guideline_c, cxx_lang_propertys},
-	{"C++", "CPP|CXX|HPP|HXX|H", "cpp", SCLEX_CPP, conf_style_guideline_c, conf_keyword_guideline_c, cxx_lang_propertys},
-	{"Python", "PY|PYW", "python", SCLEX_PYTHON, conf_style_guideline_python, conf_keyword_guideline_python, NULL}
+	{"C", "C|INC|INL", "c", SCLEX_CPP, conf_style_guideline_c, conf_keyword_guideline_c, cxx_lang_propertys, NULL},
+	{"C++", "CPP|CXX|HPP|HXX|H", "cpp", SCLEX_CPP, conf_style_guideline_c, conf_keyword_guideline_c, cxx_lang_propertys, NULL},
+	{"Python", "PY|PYW", "python", SCLEX_PYTHON, conf_style_guideline_python, conf_keyword_guideline_python, NULL, create_python_autoc_manager}
 	//{"javascript", "JS|JAVASCRIPT", "js", SCLEX_CPP, NULL, NULL, javascript_default_setting, cxx_lang_propertys, {&js_keyword_token_list, &js_builtin_types, NULL, NULL, NULL, NULL, NULL, NULL}},
 	//{"xml", "XML|XUL|HTML|XHTML", "xml", SCLEX_XML, NULL, NULL, xml_default_setting, NULL, {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL}}
 };
@@ -315,7 +319,7 @@ int load_user_style_setting(const char  * user_setting) {
 	return 0;
 }
 
-static int language_detect_and_styling(char * file_name, int inhint, style_setting_callback callback, style_setting_instance instance) {
+static int language_detect_and_styling(char * file_name, int inhint, style_setting_callback callback, style_setting_instance instance, void ** output) {
 	ostringstream reg_parten;
 	int num_of_styles;
 	int detected_style, style_identy;
@@ -417,11 +421,17 @@ static int language_detect_and_styling(char * file_name, int inhint, style_setti
     	callback(instance, SCI_MARKERDEFINE, SC_MARKNUM_FOLDERTAIL, SC_MARK_EMPTY);
     	callback(instance, SCI_SETMARGINSENSITIVEN, MARGIN_SCRIPT_FOLD_INDEX, 1);
     	callback(instance, SCI_SETFOLDFLAGS, 16, 0); // 16  	Draw line below if not expanded
+
+    	*output = (void*) c_style_languages[detected_style].create_autoc_manager;
 	}
 
 	return detected_style;
 }
 
-int IdentifyAndStyle(void * fun, void * instance, const char * name, int hint) {
-	return language_detect_and_styling((char*)name, hint, (style_setting_callback)fun, instance);
+int IdentifyAndStyle(struct nxGloryChildren * wnd, const char * name, int hint) {
+	AutoCompleteManager * (*output)(struct nxGloryChildren *)  = NULL;
+	int ret = language_detect_and_styling((char*)name, hint, (style_setting_callback)wnd->ngCommand, (style_setting_instance)wnd->ngInstance, (void**)&output);
+	if ( output )
+		wnd->autoc_manager = output(wnd);
+	return ret;
 }

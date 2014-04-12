@@ -3,13 +3,14 @@ Import('BOOST_DIR')
 Import('MSVC_DLL_OPTIONS')
 
 Building = Components_build.Clone()
-Building.Append(CPPPATH='.')
-Building.Append(LIBPATH='.')
+Building.Append(CPPPATH=['.', 'C:\\Python27\\include'])
+Building.Append(LIBPATH=['.', 'C:\\Python27\\libs'])
 Building.Append(CPPPATH=BOOST_DIR)
 Building.Append(LIBPATH=[BOOST_DIR + '/stage/lib']) # boost library search path
 Building.Append(CPPFLAGS=MSVC_DLL_OPTIONS)
-target = 'nxIGlory'+Building['SHLIBSUFFIX']
-sources = ['nxGlory.cpp','lexer_setting.cpp','pistachio.cpp']
+Building.Append(LIBS=['python27'])
+target = 'nxIGlory' + Building['SHLIBSUFFIX']
+sources = ['nxGlory.cpp','lexer_setting.cpp','pistachio.cpp','glory_autoc.cpp']
 install = [target,'nxIGlory.xpt']
 Building.SharedLibrary(target, sources)
 Building.Install('../..', install)

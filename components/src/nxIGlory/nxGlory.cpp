@@ -22,35 +22,18 @@
 #include <queue>
 
 #include "glory_message.h"
+#include "glory_autoc.h"
+#include "glory_window.h"
 
 using namespace std;
 #define GLORY_MAX_CHILD	255
 
-extern int IdentifyAndStyle(void * fun, void * instance, const char * name, int hint);
+extern int IdentifyAndStyle(struct nxGloryChildren * wnd, const char * name, int hint);
 extern int load_user_style_setting(const char * user_setting);
 static HWND _g_current_child_wnd = NULL;
 static void * _g_current_editor_instance = NULL;
 static int (*_g_current_editor_function)(void *, int, int, int);
 static set<HWND> _g_child_wnd_set;
-
-struct nxGloryChildren {
-		bool	ngIsInited;
-		bool	ngIsAcitve;
-		queue<LexerMessage> ngMessageQueue;
-		string	ngPathName; //e.g /usr/home/user_name/Hello.cpp
-		string	ngFileName; //e.g Hello.cpp
-		string	ngExtName;  //e.g cpp
-		char *  local_buffer;
-		const char *  autoc_buffer;
-		void * autoc_priv;
-		int (*ngCommand)(void*,int,int,int);
-		void *  ngInstance;
-		HWND	ngHwnd;
-		HANDLE	hFile; // Handle to document
-		HHOOK	hNotifyLisstener;
-		HANDLE  hInputHelperThread;
-		HANDLE  hInputMessageSemaphore;
-};
 
 typedef class _nxGloryPrivData {
 protected:
@@ -185,9 +168,13 @@ int _nxGloryPrivData::OpenFileIntoActiveChild(const char * file_name) {
 		//Load the file
 		ngChildWindow[nActive].ngCommand(ngChildWindow[nActive].ngInstance, SCI_SETTEXT, 0, (int)pReadBuffer); 
 		// Set the style...
-		IdentifyAndStyle((void*)ngChildWindow[nActive].ngCommand, 
-					(void*)ngChildWindow[nActive].ngInstance,
+		IdentifyAndStyle(&ngChildWindow[nActive], 
 				file_name, -1);
+		
+		if (ngChildWindow[nActive].autoc_manager) {
+			ngChildWindow[nActive].autoc_manager->Begin(NULL);
+		}
+
 	}
 	ngChildWindow[nActive].local_buffer = pReadBuffer;
 	return 0;
@@ -234,7 +221,12 @@ int _nxGloryPrivData::CloseFileInChild(int n) {
 		ngChildWindow[n].ngExtName.clear();
 		ngChildWindow[n].ngFileName.clear();
 		ngChildWindow[n].ngPathName.clear();
-		free(ngChildWindow[n].local_buffer);
+		free ( ngChildWindow[n].local_buffer );
+		if ( ngChildWindow[n].autoc_manager ) {
+			ngChildWindow[n].autoc_manager->Done();
+			delete ngChildWindow[n].autoc_manager;
+			ngChildWindow[n].autoc_manager = NULL;
+		}
 		FreeChild(n);
 	}
 	return 0;
