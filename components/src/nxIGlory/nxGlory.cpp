@@ -263,15 +263,7 @@ struct nxGloryChildren * _nxGloryPrivData::GetChildWindowByHandle(HWND wnd) {
 	return NULL;
 }
 
-static inline
-bool _is_alpha(char c) {
-	if ( (c >= 'A' && c <= 'Z') ||
-		 (c >= 'a' && c <= 'z') ||
-		 (c >= '0' && c <= '9') ||
-		 (c == '_') )
-		return true;
-	return false;
-}
+
 
 
 /* Implementation file */
@@ -319,42 +311,6 @@ void post_message_to_helper(struct nxGloryChildren * dist, LexerMessage & msg) {
 }
 
 
-
-
-static
-bool show_auto_complete(struct nxGloryChildren * dist_wnd, char ch) {
-	string * autoc_str;
-	char linebuf[512];
-	int current = dist_wnd->ngCommand(dist_wnd->ngInstance, SCI_GETCURLINE, 512, int(linebuf));
-	int pos = dist_wnd->ngCommand(dist_wnd->ngInstance, SCI_GETCURRENTPOS, 0, 0);
-	int startword = current - 1;
-	while ( startword > 0 && _is_alpha(linebuf[startword - 1]) ) {
-		--startword;
-	}
-	linebuf[current - 1] = '\0';
-	string curr_word(linebuf + startword);
-	switch ( ch ) {
-		case ' ':
-		if ( curr_word.compare("import") == 0 ||
-			 curr_word.compare("from") == 0 ) {
-			autoc_str = new string();
-			autoc_str->append("abc ");
-			autoc_str->append("abcde ");
-			autoc_str->append("bcdef ");
-			autoc_str->append("ffeddff");
-			dist_wnd->autoc_buffer = autoc_str->c_str();
-			dist_wnd->autoc_priv = (void*)autoc_str;
-			return true;
-		}
-		break;
-		case '\n':
-			return false;
-		break;
-	}
-
-	return false;
-}
-
 LRESULT CALLBACK SciWndHookProc(int nCode, WPARAM wParam, LPARAM lParam ) {
 	LRESULT ret = 0;
 	CWPSTRUCT * msgDetails;
@@ -395,7 +351,8 @@ LRESULT CALLBACK SciWndHookProc(int nCode, WPARAM wParam, LPARAM lParam ) {
 						msg.__char.added_char = notify->ch;
 						post_message_to_helper(dist_wnd, msg);
 						/* Alas, the auto complete window must be shown here */
-						if ( show_auto_complete(dist_wnd, notify->ch) ) {
+						//if ( show_auto_complete(dist_wnd, notify->ch) ) {
+						if ( dist_wnd->autoc_manager &&  dist_wnd->autoc_manager->ShowAutoComplete( notify->ch )) {
 							dist_wnd->ngCommand(dist_wnd->ngInstance, SCI_AUTOCSETMAXHEIGHT, 5, 5);
 							dist_wnd->ngCommand(dist_wnd->ngInstance, SCI_AUTOCSHOW, enterd, int(dist_wnd->autoc_buffer));
 							enterd++;
