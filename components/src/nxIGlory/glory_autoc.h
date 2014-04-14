@@ -22,7 +22,7 @@ public:
 	virtual int Begin(void * arguments) = 0;
 	virtual void Done() = 0;
 	virtual bool ShowAutoComplete(char ch) = 0;
-	virtual char * FillAutoCompleteList(int command) = 0;
+	virtual const char * FillAutoCompleteList(int command) = 0;
 	virtual int  SyntaxEngine_FackExecution(string statement) = 0;
 };
 
@@ -36,7 +36,7 @@ public:
 	int Begin(void * arguments);
 	void Done();
 	bool ShowAutoComplete(char ch);
-	char * FillAutoCompleteList(int command);
+	const char * FillAutoCompleteList(int command);
 	int  SyntaxEngine_FackExecution(string statement);
 };
 
