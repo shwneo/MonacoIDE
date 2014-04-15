@@ -71,10 +71,14 @@ int show_modules_and_packages(string & word_list) {
 	}
 }
 
+bool need_execute(string & line_statement) {
+	return false;
+}
+
 bool AutoCompleteManagerPython::ShowAutoComplete(char ch) {
 	char linebuf[512];
 	int current; 
-	int pos;
+	int pos, line_num, edit_pos;
 	int startword;
 	/* get neareast word */
 	if ( parent ) {
@@ -113,6 +117,14 @@ bool AutoCompleteManagerPython::ShowAutoComplete(char ch) {
 					return true;
 			}
 		}
+		break;
+		case '\n':
+			edit_pos = parent->ngCommand(parent->ngInstance, SCI_GETCURRENTPOS, 0, 0);
+			line_num = parent->ngCommand(parent->ngInstance, SCI_LINEFROMPOSITION, edit_pos, 0);
+			cout<<"[python] ... new line : "<<line_num<<endl;
+			if ( need_execute(line_statement) ) {
+
+			}
 		break;
 	};
 	return false;

@@ -26,6 +26,11 @@ struct nxGloryChildren {
 		HHOOK	hNotifyLisstener;
 		HANDLE  hInputHelperThread;
 		HANDLE  hInputMessageSemaphore;
+		void message_to_helper(LexerMessage & msg) {
+			ngMessageQueue.push(msg);
+			msg.__base.message_type = message_none;
+			ReleaseSemaphore(hInputMessageSemaphore, 1, NULL);
+		};
 };
 
 #endif /* __EDITOR_H__ */

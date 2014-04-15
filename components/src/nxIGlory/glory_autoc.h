@@ -11,6 +11,7 @@ using namespace std;
 #define FIND_FROM 				2
 #define FIND_FROM_IMPORT		3
 
+
 class AutoCompleteManager {
 protected:
 	struct nxGloryChildren * parent;

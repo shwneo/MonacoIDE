@@ -344,15 +344,16 @@ LRESULT CALLBACK SciWndHookProc(int nCode, WPARAM wParam, LPARAM lParam ) {
 						msg.__margin.base.message_type = message_margin;
 						msg.__margin.margin_number = notify->margin;
 						msg.__margin.edit_position = notify->position;
-						post_message_to_helper(dist_wnd, msg);
+						//post_message_to_helper(dist_wnd, msg);
+						dist_wnd->message_to_helper(msg);
 					break;
 					case SCN_CHARADDED:
 						msg.__char.base.message_type = message_char;
 						msg.__char.added_char = notify->ch;
-						post_message_to_helper(dist_wnd, msg);
+						//post_message_to_helper(dist_wnd, msg);
 						/* Alas, the auto complete window must be shown here */
 						//if ( show_auto_complete(dist_wnd, notify->ch) ) {
-						if ( dist_wnd->autoc_manager &&  dist_wnd->autoc_manager->ShowAutoComplete( notify->ch )) {
+						if ( dist_wnd->autoc_manager &&  dist_wnd->autoc_manager->ShowAutoComplete( notify->ch ) ) {
 							dist_wnd->ngCommand(dist_wnd->ngInstance, SCI_AUTOCSETMAXHEIGHT, 10, 10);
 							dist_wnd->ngCommand(dist_wnd->ngInstance, SCI_AUTOCSHOW, enterd, int(dist_wnd->autoc_manager->FillAutoCompleteList(0)));
 							enterd++;
