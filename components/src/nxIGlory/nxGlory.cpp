@@ -396,7 +396,7 @@ DWORD WINAPI inputHelperMessageThreadProc(LPVOID lpParameter) {
 			switch ( pMsg->message_type ) {
 				case message_margin:
 				cout<<"Message thread reciving margin message"<<endl;
-				line_number = ch_wnd->ngCommand(ch_wnd->ngInstance, SCI_TOGGLEFOLD, msg.__margin.edit_position, 0);
+				line_number = ch_wnd->ngCommand(ch_wnd->ngInstance, SCI_LINEFROMPOSITION, msg.__margin.edit_position, 0);
 				ch_wnd->ngCommand(ch_wnd->ngInstance, SCI_TOGGLEFOLD, line_number, 0);
 				break;
 			}
