@@ -16,7 +16,8 @@ int AutoCompleteManagerPython::Begin(void * arguments) {
 	if ( ! Py_IsInitialized() ) {
 		return -1;
 	}
-
+	PyObject * main_module = PyImport_AddModule("__main__");
+	py_locale_environment = py_global_environment = PyModule_GetDict(main_module);
 	std::cout<<"Python AutoC init"<<std::endl;
 	return 0;
 }
@@ -107,6 +108,7 @@ static regex reg_call_function("\\s*([\\.\\w.\\(\\)]+)\\s*\\(\\)");
 
 bool need_execute(string & line_statement) {
 	cout<<"[python] Seeing what to be done with:\n>>>"<<line_statement<<"\n"<<endl;
+	#if 0
 	smatch m;
 
 	if ( regex_match(line_statement, reg_import) )
@@ -138,7 +140,19 @@ bool need_execute(string & line_statement) {
 
 	/* Then, perhaps one or more error int this statment, execut it, let the 
 	   virtual machine complain the error(s)*/
+	 #endif
 	return true;
+}
+
+int evaluate_execute(string & line_statement, AutoCompleteManagerPython * vm) {
+	//PyRun_SimpleString(line_statement.c_str());
+	if (PyRun_String(line_statement.c_str(), Py_file_input, 
+					vm->py_global_environment, vm->py_locale_environment) == NULL) {
+		cout<<"Execut failed!"<<endl;
+		return -1;
+	}
+	cout<<"Execut success!"<<endl;
+	return 0;
 }
 
 bool AutoCompleteManagerPython::ShowAutoComplete(char ch) {
@@ -200,7 +214,9 @@ bool AutoCompleteManagerPython::ShowAutoComplete(char ch) {
 			linebuf[line_size] = '\0';
 			//cout<<"[python] processing line statement `"<<linebuf<<"`"<<endl;
 			if ( need_execute(string(linebuf)) ) {
-
+				if (evaluate_execute(string(linebuf), this) != 0 ) {
+					cout<<"[python] TODO: handle running exceptions!"<<endl;
+				}
 			}
 		break;
 	};

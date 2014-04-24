@@ -31,6 +31,8 @@ class AutoCompleteManagerPython : public AutoCompleteManager {
 private:
 	string autoc_str;
 public:
+	PyObject * py_global_environment;
+	PyObject * py_locale_environment;
 	AutoCompleteManagerPython (struct nxGloryChildren * _par):AutoCompleteManager(_par) {};
 	~AutoCompleteManagerPython () {cout<<"Python Autoc: destory"<<endl;};
 
