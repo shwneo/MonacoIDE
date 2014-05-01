@@ -3,6 +3,7 @@
 
 #include <Python.h>
 #include <string>
+#include <stack>
 #include "glory_window.h"
 
 using namespace std;
@@ -24,23 +25,31 @@ public:
 	virtual void Done() = 0;
 	virtual bool ShowAutoComplete(char ch) = 0;
 	virtual const char * FillAutoCompleteList(int command) = 0;
-	virtual int  SyntaxEngine_FackExecution(string statement) = 0;
 };
 
 class AutoCompleteManagerPython : public AutoCompleteManager {
 private:
 	string autoc_str;
+	PyObject * py_env_base;
+	volatile PyObject * py_env_current;
+	stack<PyObject*> py_env_frame;
 public:
-	PyObject * py_global_environment;
-	PyObject * py_locale_environment;
-	AutoCompleteManagerPython (struct nxGloryChildren * _par):AutoCompleteManager(_par) {};
-	~AutoCompleteManagerPython () {cout<<"Python Autoc: destory"<<endl;};
+	int last_frame_level;
+	//PyObject * py_global_environment;
+	//PyObject * py_locale_environment;
+	PyObject * GetCurrentEnv(){return (PyObject*)py_env_current;};
+	void PushCurrentEnv();
+	void PopCurrentEnv();
+	AutoCompleteManagerPython (struct nxGloryChildren * _par):AutoCompleteManager(_par),last_frame_level(0) {};
+	~AutoCompleteManagerPython () {
+		cout<<"Python Autoc: destory"<<endl;
+		Done();
+	};
 
 	int Begin(void * arguments);
 	void Done();
 	bool ShowAutoComplete(char ch);
 	const char * FillAutoCompleteList(int command);
-	int  SyntaxEngine_FackExecution(string statement);
 };
 
 static inline

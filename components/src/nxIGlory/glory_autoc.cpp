@@ -17,7 +17,7 @@ int AutoCompleteManagerPython::Begin(void * arguments) {
 		return -1;
 	}
 	PyObject * main_module = PyImport_AddModule("__main__");
-	py_locale_environment = py_global_environment = PyModule_GetDict(main_module);
+	py_env_current = py_env_base = PyModule_GetDict(main_module);
 	std::cout<<"Python AutoC init"<<std::endl;
 	return 0;
 }
@@ -73,81 +73,16 @@ int show_modules_and_packages(string & word_list) {
 	}
 }
 
-/* The heat of the `fake execution` mechanism */
-/* We will not execut every statment of the Python source */
-/* Sence there would be one or more `while 1` loop(s) in the source */
-/* That could cause the execut thread going to a infinite loop*/
-
-/* Sure to be excuted, report errors*/
-static regex reg_import("\\s*import\\s+");
-static regex reg_from_import("\\s*from\\s+");
-static regex reg_def_function("\\s*def\\s+");
-static regex reg_def_classes("\\s*class\\s+");
-/* The assignment case is a little complicated: */
-/* If the r-value object (or some part of it) is an executable function, then don't execute this evaluate and
-   assign the l-value as an `None` object;
-   If the r-value object is an executable class object constructor, then don't execute this evaluate and 
-   log the l-value with the type name of the class object, the future `.` calling to the l-value would be
-   assign to the class object .
-   If the r-value object is NOT an executable object, then execut the evaluate happly, the virtual machine
-   would taking care of the syntax errors */
-static regex reg_def_variable("\\s*([\\.\\w.\\(\\)]+)\\s*=\\s*([\\.\\w.\\(\\)]+)");
-static regex reg_word("[\\w]+");
-/* Must NOT been excuted! Look after the syntax errors ourself */
-static regex reg_while_loop("\\s*while\\s+");
-static regex reg_for_loop("\\s*for\\s+");
-static regex reg_assignment("\\s*\\[\\.\\w.\\(\\)]+\\s*[+\\-*/%%]?=\\s*[\\.\\w.\\(\\)]+");/* Some thing like `a+=b` just change the value 
-																 of a, not the type of a, ignore it!*/
-static regex reg_break("\\s*break\\s*");
-static regex reg_call_function("\\s*([\\.\\w.\\(\\)]+)\\s*\\(\\)");
-/* Rest lines of the file */
-/* Setp 1: Try to use `hasattr('__call__')` to find out wether the object could be excuted*/
-/* Setp 2: Check the return value of `hasattr('__call__')`. If true, ignore it; 
-           If false or the calling been fault, execut the statment happly.
-           The virtual machine would taking care of the syntax errors */
 
 bool need_execute(string & line_statement) {
 	cout<<"[python] Seeing what to be done with:\n>>>"<<line_statement<<"\n"<<endl;
-	#if 0
-	smatch m;
-
-	if ( regex_match(line_statement, reg_import) )
-		return true;
-	if ( regex_match(line_statement, reg_from_import) )
-		return true;
-	if ( regex_search(line_statement, m, reg_def_variable) ) {
-		//cout<<"[Python] get val def : "<<m[1]<<"><"<<m[2]<<endl;
-		if ( !regex_match(m[1].str(), reg_word) ) {
-			cout<<"[Python] l-value is not a word"<<endl;
-			return false;
-		}
-		//string r-value = m[2].str().c_str();
-		if ( regex_match(m[2].str(), reg_call_function) ) {
-			cout<<"[Python] r-value seems executable"<<endl;
-			return false;
-		}
-		cout<<"[Python] going to execut `"<<line_statement<<"`"<<endl;
-		return true;
-	}
-	if ( regex_match(line_statement, reg_while_loop) )
-		return false;
-	if ( regex_match(line_statement, reg_for_loop) )
-		return false;
-	if ( regex_match(line_statement, reg_assignment) )
-		return false;
-	if ( regex_match(line_statement, reg_break) )
-		return false;
-
-	/* Then, perhaps one or more error int this statment, execut it, let the 
-	   virtual machine complain the error(s)*/
-	 #endif
 	return true;
 }
 
 int evaluate_execute(string & line_statement, AutoCompleteManagerPython * vm) {
 	//PyRun_SimpleString(line_statement.c_str());
-	if (PyRun_String(line_statement.c_str(), Py_file_input, 
-					vm->py_global_environment, vm->py_locale_environment) == NULL) {
+	if (PyRun_String( line_statement.c_str(), Py_file_input, 
+					vm->GetCurrentEnv(), vm->GetCurrentEnv() ) == NULL) {
 		cout<<"Execut failed!"<<endl;
 		return -1;
 	}
@@ -182,7 +117,7 @@ bool AutoCompleteManagerPython::ShowAutoComplete(char ch) {
 	smatch m;
 	switch ( ch ) {
 		case ' ':
-		if ( curr_word.compare("import") ) {
+		if ( curr_word.compare("import") == 0 ) {
 			if ( regex_search(line_statement, m, reg) ) {
 				/* this is in a 'from XXX import XXXX' */
 			} else {
@@ -192,7 +127,7 @@ bool AutoCompleteManagerPython::ShowAutoComplete(char ch) {
 				}
 			}
 		} else 
-		if ( curr_word.compare("from") ) {
+		if ( curr_word.compare("from") == 0 ) {
 			if ( show_modules_and_packages( autoc_str ) == 0 ) {
 					return true;
 			}
@@ -227,6 +162,23 @@ const char * AutoCompleteManagerPython::FillAutoCompleteList(int command) {
 	return autoc_str.c_str();
 }
 
-int AutoCompleteManagerPython::SyntaxEngine_FackExecution(string statement) {
-	return 0;
+/*
+ * Copy another dict object from current environment, then push the current environment
+ * into the env stack
+ */
+void AutoCompleteManagerPython::PushCurrentEnv() {
+	PyObject * new_frame = PyDict_Copy(GetCurrentEnv());
+	py_env_frame.push(GetCurrentEnv());
+	py_env_current = new_frame;
 }
+
+/*
+ * Delete the current environment, replace it with the one from the stack top
+ */
+ void AutoCompleteManagerPython::PopCurrentEnv() {
+ 	if ( py_env_frame.empty() )
+ 		return;
+ 	PyObject_Del(GetCurrentEnv());
+ 	py_env_current = py_env_frame.top();
+ 	py_env_frame.pop();
+ }
