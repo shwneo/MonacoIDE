@@ -73,14 +73,45 @@ int show_modules_and_packages(string & word_list) {
 	}
 }
 
-
-bool need_execute(string & line_statement) {
+static bool need_execute(string & line_statement, AutoCompleteManagerPython * vm) {
 	cout<<"[python] Seeing what to be done with:\n>>>"<<line_statement<<"\n"<<endl;
+	regex reg_global_stage("^[0-9a-zA-Z_]+.*");
+	regex reg_sub_stage_start(".+:\\s*[\n\r]+$");
+	regex reg_sub_stage("^\\s+.+");
+	regex reg_empty_line("^\\s*[\n\r]+$");
+	
+	if ( regex_match( line_statement, reg_sub_stage_start ) ) {
+		cout<<"[python] sub statement start, execute later..."<<endl;
+		vm->stage_buf += line_statement;
+		return false;
+	}
+	if ( regex_match( line_statement, reg_global_stage) ) {
+		cout<<"[python] global statement, execute now..."<<endl;
+		goto REJOIN;
+	}
+	if ( regex_match( line_statement, reg_empty_line) ) {
+		cout<<"[python] new empty line"<<endl;
+		goto REJOIN;
+	}
+	if ( regex_match( line_statement, reg_sub_stage) ) {
+		cout<<"[python] sub statement, execute later..."<<endl;
+		vm->stage_buf += line_statement;
+		return false;
+	}
+REJOIN:
+	if ( ! vm->stage_buf.empty() ) {
+		cout<<"[python] re-join sub statement"<<endl;
+		line_statement += vm->stage_buf;
+		vm->stage_buf.clear();
+	}
 	return true;
 }
 
-int evaluate_execute(string & line_statement, AutoCompleteManagerPython * vm) {
+static int evaluate_execute(string & line_statement, AutoCompleteManagerPython * vm) {
 	//PyRun_SimpleString(line_statement.c_str());
+	cout<<"[python] Runnint >>>"<<endl;
+	cout<<line_statement<<endl;
+	cout<<"<<<"<<endl;
 	if (PyRun_String( line_statement.c_str(), Py_file_input, 
 					vm->GetCurrentEnv(), vm->GetCurrentEnv() ) == NULL) {
 		cout<<"Execut failed!"<<endl;
@@ -97,28 +128,28 @@ bool AutoCompleteManagerPython::ShowAutoComplete(char ch) {
 	int startword;
 	/* get neareast word */
 	if ( parent ) {
-		current = parent->ngCommand(parent->ngInstance, SCI_GETCURLINE, 512, int(linebuf));
+		current = parent->ngCommand( parent->ngInstance, SCI_GETCURLINE, 512, int(linebuf) );
 		if ( current < 512 ) {
 			linebuf[current - 1] = '\0';
 		} else {
 			return false;
 		}
-		pos = parent->ngCommand(parent->ngInstance, SCI_GETCURRENTPOS, 0, 0);
+		pos = parent->ngCommand( parent->ngInstance, SCI_GETCURRENTPOS, 0, 0 );
 		startword = current - 1;
-		while ( startword > 0 && _is_alpha(linebuf[startword - 1]) ) {
+		while ( startword > 0 && _is_alpha( linebuf[startword - 1] ) ) {
 			--startword;
 		}
 	} else {
 		return false;
 	}
-	string curr_word(linebuf + startword);
-	string line_statement(linebuf);
-	regex reg("\\s*from\\s+(\\w+)\\+import");
+	string curr_word( linebuf + startword );
+	string line_statement( linebuf );
+	regex reg( "\\s*from\\s+(\\w+)\\+import" );
 	smatch m;
 	switch ( ch ) {
 		case ' ':
-		if ( curr_word.compare("import") == 0 ) {
-			if ( regex_search(line_statement, m, reg) ) {
+		if ( curr_word.compare( "import" ) == 0 ) {
+			if ( regex_search( line_statement, m, reg ) ) {
 				/* this is in a 'from XXX import XXXX' */
 			} else {
 				/* this is in a 'import xxx' or a 'import xxx as xxxx' */
@@ -148,11 +179,13 @@ bool AutoCompleteManagerPython::ShowAutoComplete(char ch) {
 			cout<<"[python] get line size = "<<line_size<<endl;
 			linebuf[line_size] = '\0';
 			//cout<<"[python] processing line statement `"<<linebuf<<"`"<<endl;
-			if ( need_execute(string(linebuf)) ) {
-				if (evaluate_execute(string(linebuf), this) != 0 ) {
+			string buffered_line(linebuf);
+			if ( need_execute(buffered_line, this) ) {
+				if (evaluate_execute(buffered_line, this) != 0 ) {
 					cout<<"[python] TODO: handle running exceptions!"<<endl;
 				}
 			}
+			cout<<"[python] with sub statement = "<<stage_buf<<endl;
 		break;
 	};
 	return false;
@@ -182,3 +215,11 @@ void AutoCompleteManagerPython::PushCurrentEnv() {
  	py_env_current = py_env_frame.top();
  	py_env_frame.pop();
  }
+
+int AutoCompleteManagerPython::AddToStage(string & stage) {
+	return 0;
+}
+
+void AutoCompleteManagerPython::FlushStage() {
+
+}
