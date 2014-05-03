@@ -421,6 +421,7 @@ static int language_detect_and_styling(char * file_name, int inhint, style_setti
     	callback(instance, SCI_MARKERDEFINE, SC_MARKNUM_FOLDERTAIL, SC_MARK_EMPTY);
     	callback(instance, SCI_SETMARGINSENSITIVEN, MARGIN_SCRIPT_FOLD_INDEX, 1);
     	callback(instance, SCI_SETFOLDFLAGS, 16, 0); // 16  	Draw line below if not expanded
+    	callback(instance, SCI_SETTABWIDTH, 4, 4); // Set tab width as 4
 
     	*output = (void*) c_style_languages[detected_style].create_autoc_manager;
 	}

@@ -35,6 +35,7 @@ private:
 	stack<PyObject*> py_env_frame;
 public:
 	string stage_buf;
+	int indent_level;
 	int last_frame_level;
 	//PyObject * py_global_environment;
 	//PyObject * py_locale_environment;

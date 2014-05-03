@@ -79,10 +79,18 @@ static bool need_execute(string & line_statement, AutoCompleteManagerPython * vm
 	regex reg_sub_stage_start(".+:\\s*[\n\r]+$");
 	regex reg_sub_stage("^\\s+.+");
 	regex reg_empty_line("^\\s*[\n\r]+$");
+	regex reg_retrun_stage("^\\s*return[\\s+\\n].*");
 	
 	if ( regex_match( line_statement, reg_sub_stage_start ) ) {
 		cout<<"[python] sub statement start, execute later..."<<endl;
 		vm->stage_buf += line_statement;
+		vm->indent_level = 1;
+		return false;
+	}
+	if ( regex_match( line_statement, reg_retrun_stage) ) {
+		cout<<"[python] return statement"<<endl;
+		vm->stage_buf += line_statement;
+		vm->indent_level = -1;
 		return false;
 	}
 	if ( regex_match( line_statement, reg_global_stage) ) {
@@ -185,6 +193,28 @@ bool AutoCompleteManagerPython::ShowAutoComplete(char ch) {
 					cout<<"[python] TODO: handle running exceptions!"<<endl;
 				}
 			}
+			
+			int tab_width = parent->ngCommand(parent->ngInstance, SCI_GETTABWIDTH, 0, 0);
+			int last_indent = 0;
+			if ( line_num >= 1 ) {
+				int last_indent = parent->ngCommand(parent->ngInstance, SCI_GETLINEINDENTATION, line_num - 1, 0);
+			}
+			cout<<"Get line "<<line_num - 1<<" ident width "<<last_indent<<endl;
+			int indent = 0;
+			if ( tab_width ) {
+				indent = last_indent / tab_width;
+			} else {
+				indent = last_indent;
+			}
+			indent += this->indent_level;
+			string indent_buffer = "";
+			while ( 0 < indent--) {
+				//parent->ngCommand(parent->ngInstance, SCI_INSERTTEXT, edit_pos, (int)"\t");
+				indent_buffer += "\t";
+			}
+			parent->ngCommand(parent->ngInstance, SCI_REPLACESEL, 0, (int)indent_buffer.c_str());
+			this->indent_level = 0;
+			
 			cout<<"[python] with sub statement = "<<stage_buf<<endl;
 		break;
 	};
