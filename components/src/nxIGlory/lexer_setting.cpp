@@ -423,7 +423,9 @@ static int language_detect_and_styling(char * file_name, int inhint, style_setti
     	callback(instance, SCI_SETFOLDFLAGS, 16, 0); // 16  	Draw line below if not expanded
     	callback(instance, SCI_SETTABWIDTH, 4, 0); // Set tab width as 4
     	callback(instance, SCI_SETUSETABS, 1, 0);
-    	callback(instance, SCI_SETWHITESPACESIZE, 10, 0);
+    	callback(instance, SCI_STYLESETSIZE, STYLE_DEFAULT, 10);
+    	callback(instance, SCI_STYLESETFONT, STYLE_DEFAULT, (int)"Consolas");
+
     	//callback(instance, SCI_SETINDENT, 4, 0);
 
     	*output = (void*) c_style_languages[detected_style].create_autoc_manager;
