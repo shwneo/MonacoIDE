@@ -71,6 +71,7 @@ int show_modules_and_packages(string & word_list) {
 		//cout<<"[Module] "<<mod<<endl;
 		++set_itor;
 	}
+	return 0;
 }
 
 static bool need_execute(string & line_statement, AutoCompleteManagerPython * vm) {
@@ -119,7 +120,7 @@ static int evaluate_execute(string & line_statement, AutoCompleteManagerPython *
 	//PyRun_SimpleString(line_statement.c_str());
 	cout<<"[python] Runnint >>>"<<endl;
 	cout<<line_statement<<endl;
-	cout<<"<<<"<<endl;
+	
 	if (PyRun_String( line_statement.c_str(), Py_file_input, 
 					vm->GetCurrentEnv(), vm->GetCurrentEnv() ) == NULL) {
 		cout<<"Execut failed!"<<endl;
@@ -129,11 +130,38 @@ static int evaluate_execute(string & line_statement, AutoCompleteManagerPython *
 	return 0;
 }
 
+static int python_dir(string & obj, AutoCompleteManagerPython * vm, set<string> & ret_set)  {
+	int ret;
+	string _dir_("dir(");
+	_dir_ += obj;
+	_dir_ += ")";
+	cout<<"[python] diring "<<_dir_<<endl;
+	PyObject * _result = PyRun_String(_dir_.c_str(), Py_eval_input, vm->GetCurrentEnv(), vm->GetCurrentEnv());
+	if ( _result && PyList_Check( _result )) {
+		for ( int i = 0; i < PyList_Size(_result); ++i ) {
+			char * res_item = PyString_AsString( PyList_GetItem(_result, i));
+			if ( res_item ) {
+				//ret += res_item;
+				//ret += " ";
+				ret_set.insert(string(res_item));
+				ret++;
+			}
+		}
+	}
+	return ret;
+}
+
 bool AutoCompleteManagerPython::ShowAutoComplete(char ch) {
-	char linebuf[512];
+	char linebuf[512]={0};
 	int current; 
 	int pos, line_num, edit_pos, line_size;
 	int startword;
+	bool any_active;
+	int tab_width, indent, ws_size, last_indent = 0;
+	string indent_buffer = "";
+	string buffered_line;
+	set<string> autoc_str_set;
+	set<string>::iterator autoc_str_set_itor;
 	/* get neareast word */
 	if ( parent ) {
 		current = parent->ngCommand( parent->ngInstance, SCI_GETCURLINE, 512, int(linebuf) );
@@ -187,35 +215,55 @@ bool AutoCompleteManagerPython::ShowAutoComplete(char ch) {
 			cout<<"[python] get line size = "<<line_size<<endl;
 			linebuf[line_size] = '\0';
 			//cout<<"[python] processing line statement `"<<linebuf<<"`"<<endl;
-			string buffered_line(linebuf);
+			buffered_line = linebuf;
 			if ( need_execute(buffered_line, this) ) {
 				if (evaluate_execute(buffered_line, this) != 0 ) {
 					cout<<"[python] TODO: handle running exceptions!"<<endl;
 				}
 			}
 			
-			int tab_width = parent->ngCommand(parent->ngInstance, SCI_GETTABWIDTH, 0, 0);
-			int last_indent = 0;
+			tab_width = parent->ngCommand(parent->ngInstance, SCI_GETTABWIDTH, 0, 0);
+			
 			if ( line_num >= 1 ) {
-				int last_indent = parent->ngCommand(parent->ngInstance, SCI_GETLINEINDENTATION, line_num - 1, 0);
+				last_indent = parent->ngCommand(parent->ngInstance, SCI_GETLINEINDENTATION, line_num - 1, 0);
 			}
 			cout<<"Get line "<<line_num - 1<<" ident width "<<last_indent<<endl;
-			int indent = 0;
+			indent = 0;
 			if ( tab_width ) {
 				indent = last_indent / tab_width;
 			} else {
 				indent = last_indent;
 			}
 			indent += this->indent_level;
-			string indent_buffer = "";
+			
 			while ( 0 < indent--) {
 				//parent->ngCommand(parent->ngInstance, SCI_INSERTTEXT, edit_pos, (int)"\t");
 				indent_buffer += "\t";
 			}
 			parent->ngCommand(parent->ngInstance, SCI_REPLACESEL, 0, (int)indent_buffer.c_str());
 			this->indent_level = 0;
-			
 			cout<<"[python] with sub statement = "<<stage_buf<<endl;
+		break;
+		default:
+			any_active = parent->ngCommand(parent->ngInstance, SCI_AUTOCACTIVE, 0, 0);
+			if ( any_active ) {
+				return false;
+			} else {
+				if ( ch == '_' ||
+					 (ch >= 'a' && ch <= 'z') ||
+					 (ch >= 'A' && ch <= 'Z') ) {
+					
+					python_dir(string("__builtins__"), this, autoc_str_set);
+					python_dir(string(" "), this, autoc_str_set);
+					for ( autoc_str_set_itor = autoc_str_set.begin(); autoc_str_set_itor != autoc_str_set.end(); ++autoc_str_set_itor ) {
+						autoc_str += *autoc_str_set_itor;
+						autoc_str += " ";
+					}
+					ws_size = parent->ngCommand(parent->ngInstance, SCI_GETWHITESPACESIZE, 0 ,0);
+					cout<<"[python] white size = "<<ws_size<<endl;
+					return true;
+				}
+			}
 		break;
 	};
 	return false;

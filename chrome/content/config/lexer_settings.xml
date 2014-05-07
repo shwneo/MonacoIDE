@@ -243,7 +243,7 @@
 				<BackColor>#FFFFFF</BackColor>
 				<FontItalic>false</FontItalic>
 				<FontBold>false</FontBold>
-				<FontName>Century</FontName>
+				<FontName>Consolas</FontName>
 			</Default>
 			<String name='string'>
 				<FontName>Century</FontName>
