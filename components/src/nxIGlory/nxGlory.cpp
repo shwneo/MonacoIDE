@@ -354,9 +354,9 @@ LRESULT CALLBACK SciWndHookProc(int nCode, WPARAM wParam, LPARAM lParam ) {
 						/* Alas, the auto complete window must be shown here */
 						//if ( show_auto_complete(dist_wnd, notify->ch) ) {
 						if ( dist_wnd->autoc_manager &&  dist_wnd->autoc_manager->ShowAutoComplete( notify->ch ) ) {
-							enterd++;
 							dist_wnd->ngCommand(dist_wnd->ngInstance, SCI_AUTOCSETMAXHEIGHT, 10, 10);
 							dist_wnd->ngCommand(dist_wnd->ngInstance, SCI_AUTOCSHOW, enterd, int(dist_wnd->autoc_manager->FillAutoCompleteList(0)));
+							enterd++;
 						} else {
 							enterd = 0;
 						}

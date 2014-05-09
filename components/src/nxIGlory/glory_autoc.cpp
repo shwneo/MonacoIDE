@@ -244,6 +244,18 @@ bool AutoCompleteManagerPython::ShowAutoComplete(char ch) {
 			this->indent_level = 0;
 			cout<<"[python] with sub statement = "<<stage_buf<<endl;
 		break;
+		case '.':
+			autoc_str_set.clear();
+			autoc_str = "";
+			python_dir(curr_word, this, autoc_str_set);
+			for ( autoc_str_set_itor = autoc_str_set.begin(); autoc_str_set_itor != autoc_str_set.end(); ++autoc_str_set_itor ) {
+				autoc_str += *autoc_str_set_itor;
+				autoc_str += " ";
+			}
+			if ( !autoc_str.empty() ) {
+				return true;
+			}
+		break;
 		default:
 			any_active = parent->ngCommand(parent->ngInstance, SCI_AUTOCACTIVE, 0, 0);
 			if ( any_active ) {
