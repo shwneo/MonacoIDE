@@ -151,6 +151,28 @@ static int python_dir(string & obj, AutoCompleteManagerPython * vm, set<string> 
 	return ret;
 }
 
+static inline bool _is_subexpression_alpha(char ch) {
+	if ( ch == '.' ||
+		 ch == '_' ||
+		 (ch >= 'a' && ch <= 'z') ||
+		 (ch >= 'A' && ch <= 'Z') ||
+		 (ch >= '0' && ch <= '9')
+		) {
+		return true;
+	}
+	return false;
+}
+
+char * get_subexpression_from_line(char * line_buffer, int length) {
+	int start = length - 1;
+	cout<<"len = "<<length<<endl;
+	while ( start > 0 &&  _is_subexpression_alpha( line_buffer[ start - 1 ] ) ) {
+		--start;
+	}
+	cout<<"start = "<<start<<endl;
+	return line_buffer + start;
+}
+
 bool AutoCompleteManagerPython::ShowAutoComplete(char ch) {
 	char linebuf[512]={0};
 	int current; 
@@ -160,6 +182,7 @@ bool AutoCompleteManagerPython::ShowAutoComplete(char ch) {
 	int tab_width, indent, ws_size, last_indent = 0;
 	string indent_buffer = "";
 	string buffered_line;
+	string dir_subexpression = "";
 	set<string> autoc_str_set;
 	set<string>::iterator autoc_str_set_itor;
 	/* get neareast word */
@@ -247,7 +270,10 @@ bool AutoCompleteManagerPython::ShowAutoComplete(char ch) {
 		case '.':
 			autoc_str_set.clear();
 			autoc_str = "";
-			python_dir(curr_word, this, autoc_str_set);
+			dir_subexpression = get_subexpression_from_line(linebuf, current);
+			cout<<"[Python] dot subexpression = "<<dir_subexpression<<endl;
+			//python_dir(curr_word, this, autoc_str_set);
+			python_dir(dir_subexpression, this, autoc_str_set);
 			for ( autoc_str_set_itor = autoc_str_set.begin(); autoc_str_set_itor != autoc_str_set.end(); ++autoc_str_set_itor ) {
 				autoc_str += *autoc_str_set_itor;
 				autoc_str += " ";
@@ -258,21 +284,27 @@ bool AutoCompleteManagerPython::ShowAutoComplete(char ch) {
 		break;
 		default:
 			any_active = parent->ngCommand(parent->ngInstance, SCI_AUTOCACTIVE, 0, 0);
+			edit_pos = parent->ngCommand(parent->ngInstance, SCI_GETCURRENTPOS, 0, 0);
+			line_num = parent->ngCommand(parent->ngInstance, SCI_LINEFROMPOSITION, edit_pos, 0);
 			if ( any_active ) {
 				return false;
 			} else {
 				if ( ch == '_' ||
 					 (ch >= 'a' && ch <= 'z') ||
 					 (ch >= 'A' && ch <= 'Z') ) {
-					
-					python_dir(string("__builtins__"), this, autoc_str_set);
-					python_dir(string(" "), this, autoc_str_set);
+					if ( line_num != last_dir_builtin ) {
+						autoc_str = "";
+						autoc_str_set.clear();
+						python_dir(string("__builtins__"), this, autoc_str_set);
+						python_dir(string(" "), this, autoc_str_set);
+						last_dir_builtin = line_num;
+					}
 					for ( autoc_str_set_itor = autoc_str_set.begin(); autoc_str_set_itor != autoc_str_set.end(); ++autoc_str_set_itor ) {
 						autoc_str += *autoc_str_set_itor;
 						autoc_str += " ";
+						cout<<*autoc_str_set_itor<<endl;
 					}
-					ws_size = parent->ngCommand(parent->ngInstance, SCI_GETWHITESPACESIZE, 0 ,0);
-					cout<<"[python] white size = "<<ws_size<<endl;
+					
 					return true;
 				}
 			}

@@ -33,10 +33,12 @@ private:
 	PyObject * py_env_base;
 	volatile PyObject * py_env_current;
 	stack<PyObject*> py_env_frame;
+	
 public:
 	string stage_buf;
 	int indent_level;
 	int last_frame_level;
+	int last_dir_builtin;
 	//PyObject * py_global_environment;
 	//PyObject * py_locale_environment;
 	int AddToStage(string & stage);
@@ -44,7 +46,9 @@ public:
 	PyObject * GetCurrentEnv(){return (PyObject*)py_env_current;};
 	void PushCurrentEnv();
 	void PopCurrentEnv();
-	AutoCompleteManagerPython (struct nxGloryChildren * _par):AutoCompleteManager(_par),last_frame_level(0) {};
+	AutoCompleteManagerPython (struct nxGloryChildren * _par):AutoCompleteManager(_par),last_frame_level(0) {
+		last_dir_builtin = -1;
+	};
 	~AutoCompleteManagerPython () {
 		cout<<"Python Autoc: destory"<<endl;
 		Done();

@@ -353,13 +353,25 @@ LRESULT CALLBACK SciWndHookProc(int nCode, WPARAM wParam, LPARAM lParam ) {
 						//post_message_to_helper(dist_wnd, msg);
 						/* Alas, the auto complete window must be shown here */
 						//if ( show_auto_complete(dist_wnd, notify->ch) ) {
-						if ( dist_wnd->autoc_manager &&  dist_wnd->autoc_manager->ShowAutoComplete( notify->ch ) ) {
-							dist_wnd->ngCommand(dist_wnd->ngInstance, SCI_AUTOCSETMAXHEIGHT, 10, 10);
-							dist_wnd->ngCommand(dist_wnd->ngInstance, SCI_AUTOCSHOW, enterd, int(dist_wnd->autoc_manager->FillAutoCompleteList(0)));
+						if ( dist_wnd->ngCommand(dist_wnd->ngInstance, SCI_AUTOCACTIVE, 0, 0) ) {
 							enterd++;
 						} else {
 							enterd = 0;
 						}
+						
+						if ( notify->ch == '.' || notify->ch == ' ' ) {
+							enterd = 0;
+						}
+						
+						if ( dist_wnd->autoc_manager &&  dist_wnd->autoc_manager->ShowAutoComplete( notify->ch ) ) {
+							if ( enterd == 0 && notify->ch != '.' && notify->ch != ' ' ) {
+								enterd = 1;
+							}
+
+							dist_wnd->ngCommand(dist_wnd->ngInstance, SCI_AUTOCSETMAXHEIGHT, 10, 10);
+							dist_wnd->ngCommand(dist_wnd->ngInstance, SCI_AUTOCSHOW, enterd, int(dist_wnd->autoc_manager->FillAutoCompleteList(0)));
+						}
+						
 					break;
 					case SCN_AUTOCSELECTION:
 					case SCN_AUTOCCANCELLED:
