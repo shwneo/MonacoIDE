@@ -81,7 +81,19 @@ static bool need_execute(string & line_statement, AutoCompleteManagerPython * vm
 	regex reg_sub_stage("^\\s+.+");
 	regex reg_empty_line("^\\s*[\n\r]+$");
 	regex reg_retrun_stage("^\\s*return[\\s+\\n].*");
+	int curr_pos = 0;
+	int curr_style;
+
+	curr_pos = vm->parent_do_command(SCI_GETCURRENTPOS, 0, 0);
+	curr_style = vm->parent_do_command(SCI_GETSTYLEAT, curr_pos - 3, 0);
+	cout<<"[python] current style = "<<curr_style<<" @ "<<curr_pos<<endl;
 	
+	if ( curr_style == 6 || curr_style == 7 ) {
+		cout<<"[python] We're in multi line string, execute later..."<<endl;
+		vm->stage_buf += line_statement;
+		vm->indent_level = 0;
+		return false;
+	}
 	if ( regex_match( line_statement, reg_sub_stage_start ) ) {
 		cout<<"[python] sub statement start, execute later..."<<endl;
 		vm->stage_buf += line_statement;
@@ -107,6 +119,7 @@ static bool need_execute(string & line_statement, AutoCompleteManagerPython * vm
 		vm->stage_buf += line_statement;
 		return false;
 	}
+
 REJOIN:
 	if ( ! vm->stage_buf.empty() ) {
 		cout<<"[python] re-join sub statement"<<endl;
@@ -150,6 +163,7 @@ static int python_dir(string & obj, AutoCompleteManagerPython * vm, set<string> 
 	}
 	return ret;
 }
+
 
 static inline bool _is_subexpression_alpha(char ch) {
 	if ( ch == '.' ||

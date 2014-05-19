@@ -25,6 +25,9 @@ public:
 	virtual void Done() = 0;
 	virtual bool ShowAutoComplete(char ch) = 0;
 	virtual const char * FillAutoCompleteList(int command) = 0;
+	virtual int parent_do_command(int command, int arg1, int arg2) {
+		return parent->ngCommand(parent->ngInstance, command, arg1, arg2);
+	};
 };
 
 class AutoCompleteManagerPython : public AutoCompleteManager {
@@ -58,6 +61,7 @@ public:
 	void Done();
 	bool ShowAutoComplete(char ch);
 	const char * FillAutoCompleteList(int command);
+	//int parent_do_command(int command, int arg1, int arg2);
 };
 
 static inline
