@@ -38,8 +38,9 @@ xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" persist="s
 </toolbox>
 
 <hbox flex="1">
+
 	<tree id="my-tree" flex="1"
-       datasources="rdf:files" ref="NC:FilesRoot" flags="dont-build-content" width="150">
+       datasources="rdf:files" ref="NC:FilesRoot" flags="dont-build-content" width="100">
 		<treecols>
     		<treecol id="Name" label="Name" primary="true" flex="1"/>
   		</treecols>
@@ -56,26 +57,28 @@ xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" persist="s
       		</rule>
     	</template>
 	</tree>
-
 	<splitter/>
 
-	<vbox flex="10">
-		<tabbox id="t_box">
-			<tabs id="all_tabs" />
-		</tabbox>
-		<iframe id="main_frame" flex="1" style="padding:0,margin:0"></iframe>
+	<vbox flex="8">
+		<vbox flex="10">
+			<tabbox id="t_box">
+				<tabs id="all_tabs" />
+			</tabbox>
+			<iframe id="main_frame" flex="1" style="padding:0,margin:0"></iframe>
+		</vbox>
+		<splitter/>
+		<vbox >
+			<richlistbox flex="1">
+  				<richlistitem>
+    				<description>A XUL Description! </description>
+  				</richlistitem>
+  				<richlistitem>
+    				<description> A XUL Description! </description>
+  				</richlistitem>
+			</richlistbox>
+		</vbox>
 	</vbox>
+	
 </hbox>
-
-<vbox>
-<richlistbox>
-  <richlistitem>
-    <description>A XUL Description! </description>
-  </richlistitem>
-  <richlistitem>
-    <description> A XUL Description! </description>
-  </richlistitem>
-</richlistbox>
-</vbox>
 
 </window>
