@@ -80,5 +80,6 @@ xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" persist="s
 	</vbox>
 	
 </hbox>
-<button oncommand="on_test_observer()"/>
+<button text="1" oncommand="on_test_observer_1()"/>
+<button text="2" oncommand="on_test_observer_2()"/>
 </window>

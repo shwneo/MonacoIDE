@@ -107,7 +107,12 @@ function get_url_from_chrome(chrome_name) {
 let testObserver = {
 	observe : function (aSubject, aTopic, aData) {
 		if ( aTopic == "MonacoIDE.compile_complain_message.clear" ) {
-			window.alert("Now clearing the complain message!");
+			//window.alert("Now clearing the complain message!");
+			var del_ele;
+			do {
+				del_ele = message_box.removeItemAt( 0 );
+				dump("clearing item...");
+			} while(del_ele);
 		} else
 		if ( aTopic == "MonacoIDE.compile_complain_message.append" ) {
 			//window.alert("Getting complain message " + aData);
@@ -142,8 +147,12 @@ function on_window_load() {
 	var saveAs = getElementById("menu_save_as");
 }
 
-function on_test_observer() {
+function on_test_observer_1() {
 	obj.CommandWindow(6,0,0);
+}
+
+function on_test_observer_2() {
+	obj.CommandWindow(7,0,0);
 }
 
 function on_tab_command() {
