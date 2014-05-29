@@ -12,6 +12,8 @@ function win_resize() {
 
 var obj;
 var tab_list;
+var observerService;
+var message_box;
 
 function open_a_file(file_name) {
 	
@@ -53,8 +55,16 @@ function open_a_file(file_name) {
 		tabs.appendChild(new_tab);
 		tabs.selectedItem = new_tab;
 		tab_list.add(new_tab);
-	} 
-
+	}
+	/* testing code for observer */
+	observerService = Components.classes["@mozilla.org/observer-service;1"]
+		.getService(Components.interfaces.nsIObserverService);
+	if ( observerService ) {
+		observerService.addObserver(testObserver,"MonacoIDE.compile_complain_message.clear",false);
+		observerService.addObserver(testObserver,"MonacoIDE.compile_complain_message.append",false);
+		observerService.addObserver(testObserver,"MonacoIDE.compile_complain_message.new",false);
+	}
+	message_box = document.getElementById("message_box");
 	return wnd;
 }
 
@@ -94,6 +104,26 @@ function get_url_from_chrome(chrome_name) {
 	return rv;
 }
 
+let testObserver = {
+	observe : function (aSubject, aTopic, aData) {
+		if ( aTopic == "MonacoIDE.compile_complain_message.clear" ) {
+			window.alert("Now clearing the complain message!");
+		} else
+		if ( aTopic == "MonacoIDE.compile_complain_message.append" ) {
+			//window.alert("Getting complain message " + aData);
+			if ( message_box ) {
+				message_box.appendItem(aData, 0);
+				dump("append message done");
+			} else {
+				dump("message_box is null");
+			}
+		} else
+		if ( aTopic == "MonacoIDE.compile_complain_message.new" ) {
+			window.alert("New complain session with message " + aData);
+		}
+	}
+}
+
 function on_window_load() {
 	dump("Now loading window...\n");
 	
@@ -110,7 +140,10 @@ function on_window_load() {
 	
 	var tabs = getElementById("all_tabs");
 	var saveAs = getElementById("menu_save_as");
-	
+}
+
+function on_test_observer() {
+	obj.CommandWindow(6,0,0);
 }
 
 function on_tab_command() {

@@ -67,8 +67,8 @@ xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" persist="s
 			<iframe id="main_frame" flex="1" style="padding:0,margin:0"></iframe>
 		</vbox>
 		<splitter/>
-		<vbox >
-			<richlistbox flex="1">
+		<vbox flex="2">
+			<richlistbox id="message_box" flex="1" style="overflow-x: auto; overflow-y: auto;">
   				<richlistitem>
     				<description>A XUL Description! </description>
   				</richlistitem>
@@ -80,5 +80,5 @@ xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" persist="s
 	</vbox>
 	
 </hbox>
-
+<button oncommand="on_test_observer()"/>
 </window>
