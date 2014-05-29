@@ -611,6 +611,10 @@ NS_IMETHODIMP nxGlory::CommandWindow(int32_t cmd, int32_t lparam, int32_t wparam
 	case 6: /* for observer testing */
 		printf("6666666666666666666666666\n");
 		//AutoComplete_Notify_IDE("MonacoIDE.compile_complain_message.clear","");
+		//ReportToMessageBox(15, "Syntax error", "`a` not decleared ");
+		ClearMessageBox();
+		break;
+	case 7:
 		ReportToMessageBox(15, "Syntax error", "`a` not decleared ");
 		break;
 	};

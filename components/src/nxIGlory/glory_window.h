@@ -62,4 +62,8 @@ static void ReportToMessageBox(int line, char * type, char * message) {
 	AutoComplete_Notify_IDE("MonacoIDE.compile_complain_message.append", report_str.str().c_str());
 }
 
+static void ClearMessageBox() {
+	AutoComplete_Notify_IDE("MonacoIDE.compile_complain_message.clear", "");
+}
+
 #endif /* __EDITOR_H__ */
