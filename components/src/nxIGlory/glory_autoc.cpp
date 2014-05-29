@@ -256,6 +256,13 @@ bool AutoCompleteManagerPython::ShowAutoComplete(char ch) {
 			if ( need_execute(buffered_line, this) ) {
 				if (evaluate_execute(buffered_line, this) != 0 ) {
 					cout<<"[python] TODO: handle running exceptions!"<<endl;
+					PyObject * err_type, * err_value, * err_traceback, * err_value_str, * err_type_str;
+					PyErr_Fetch(&err_type, &err_value, &err_traceback);
+					err_value_str = PyObject_Str(err_value);
+					err_type_str  = PyObject_Str(err_type);
+					char * str_message = PyString_AsString(err_value_str);
+					char * str_type = PyString_AsString(err_type_str);
+					ReportToMessageBox(line_num, str_type, str_message);
 				}
 			}
 			
