@@ -558,6 +558,26 @@ NS_IMETHODIMP nxGlory::ResizeWindow(int32_t x, int32_t y, int32_t width, int32_t
 	return NS_OK;
 }
 
+void _moz_observer_testing() {
+	nsCOMPtr<nsIServiceManager> servMan;
+	nsresult rv = NS_GetServiceManager(getter_AddRefs(servMan));
+	if ( NS_FAILED(rv) ) {
+		printf("Cannot get service manager!\n");
+		return;
+	}
+	nsCOMPtr<nsIObserverService> observerService;
+	rv = servMan->GetServiceByContractID("@mozilla.org/observer-service;1",
+									NS_GET_IID(nsIObserverService),
+									getter_AddRefs(observerService));
+	if ( NS_FAILED(rv) ) {
+		printf("Cannot get observer service!\n");
+		return;
+	}
+	const PRUnichar * strData = NS_ConvertASCIItoUTF16("Hi! I'm a message").get();
+	observerService->NotifyObservers(NULL, "xulschoolhello-test-topic", strData);
+
+}
+
 /* long CommandWindow (in long cmd, in long lparam, in long wparam); */
 NS_IMETHODIMP nxGlory::CommandWindow(int32_t cmd, int32_t lparam, int32_t wparam, int32_t *_retval)
 {
@@ -587,6 +607,11 @@ NS_IMETHODIMP nxGlory::CommandWindow(int32_t cmd, int32_t lparam, int32_t wparam
 		if (lparam >= 0) {
 			*_retval = pData->SaveFileInChild(lparam);
 		}
+		break;
+	case 6: /* for observer testing */
+		printf("6666666666666666666666666\n");
+		//AutoComplete_Notify_IDE("MonacoIDE.compile_complain_message.clear","");
+		ReportToMessageBox(15, "Syntax error", "`a` not decleared ");
 		break;
 	};
     return NS_OK;

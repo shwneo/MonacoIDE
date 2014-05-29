@@ -2,7 +2,11 @@
 #define __EDITOR_H__
 #include <queue>
 #include <string>
+#include <sstream>
 #include <windows.h>
+#include <nsIServiceManager.h>
+#include <nsObserverService.h>
+
 #include "glory_message.h"
 
 using namespace std;
@@ -32,5 +36,30 @@ struct nxGloryChildren {
 			ReleaseSemaphore(hInputMessageSemaphore, 1, NULL);
 		};
 };
+
+static void AutoComplete_Notify_IDE ( const char * topic, const char * message ) {
+	nsCOMPtr<nsIServiceManager> servMan;
+	nsresult rv = NS_GetServiceManager(getter_AddRefs(servMan));
+	if ( NS_FAILED(rv) ) {
+		printf("Cannot get service manager!\n");
+		return;
+	}
+	nsCOMPtr<nsIObserverService> observerService;
+	rv = servMan->GetServiceByContractID("@mozilla.org/observer-service;1",
+									NS_GET_IID(nsIObserverService),
+									getter_AddRefs(observerService));
+	if ( NS_FAILED(rv) ) {
+		printf("Cannot get observer service!\n");
+		return;
+	}
+	const PRUnichar * strData = NS_ConvertASCIItoUTF16(message).get();
+	observerService->NotifyObservers(NULL, topic, strData);
+}
+
+static void ReportToMessageBox(int line, char * type, char * message) {
+	ostringstream report_str;
+	report_str << line << ";" << type <<";"<<message;
+	AutoComplete_Notify_IDE("MonacoIDE.compile_complain_message.append", report_str.str().c_str());
+}
 
 #endif /* __EDITOR_H__ */
