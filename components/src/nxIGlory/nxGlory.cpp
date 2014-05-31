@@ -65,6 +65,7 @@ _nxGloryPrivData::_nxGloryPrivData():ngHmodule(NULL),nInitiallStatus(0),current_
 		ngChildWindow[i].ngCommand = NULL;
 		ngChildWindow[i].ngHwnd = NULL;
 		ngChildWindow[i].ngInstance = NULL;
+		ngChildWindow[i].autoc_manager = NULL;
 	}
 }
 
@@ -162,6 +163,7 @@ int _nxGloryPrivData::OpenFileIntoActiveChild(const char * file_name) {
 	
 	ngChildWindow[nActive].ngFileName = file_name;
 	ngChildWindow[nActive].hFile = hFile;
+	ngChildWindow[nActive].autoc_manager = NULL;
 	
 
 	if (ngChildWindow[nActive].ngCommand && ngChildWindow[nActive].ngInstance) {
