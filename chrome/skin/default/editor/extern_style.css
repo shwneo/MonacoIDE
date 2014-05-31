@@ -4,28 +4,36 @@
 }
 
 [anonid="tablabel"] {
-	width: 84px;
-	height: 20px;
+	max-width: 250px;
+	height: 35px;
 	text-align: center;
 	background-image: none;
 	background: transparent;
 }
 
 [anonid="tabinnerbox"] {
-	width: 110px;
-	height: 20px;
-	background-image: url('chrome://MonacoIDE/skin/default/editor/tab_normal.png');
+	height: 35px;
+	min-width: 75px;
+	border-radius:6px 6px 0px 0px;
+	border-top-style:solid;
+	border-right-style:solid;
+	border-left-style:solid;
+	border-bottom-style:none;
+	border-width: 2px;
+	border-color: rgb(109,109,109);
+	background-image: url('chrome://MonacoIDE/skin/default/editor/bg_normal1.png');
 	background-repeat: repeat-x;
+	padding:8px 5px;
 }
 
 [anonid="tabinnerbox"]:hover {
-	background-image: url('chrome://MonacoIDE/skin/default/editor/tab_hover.png');
+	background-image: url('chrome://MonacoIDE/skin/default/editor/bg_hover.png');
 	background-repeat: repeat-x;
 }
 
 [anonid="toolbarbutton"] {
 	-moz-appearance:none;
-	border: 0px;
+	border: none;
 	width: 12px;
 	height: 12px;
 	background-repeat:no-repeat;
