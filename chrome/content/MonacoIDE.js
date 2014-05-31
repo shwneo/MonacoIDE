@@ -4,7 +4,7 @@ function win_resize() {
 	//dump("resizing detected");
 	var ele_frame = document.getElementById("main_frame");
 	var container_x = ele_frame.contentWindow.mozInnerScreenX - ele_frame.contentWindow.screenX - 10;
-	var container_y = ele_frame.contentWindow.mozInnerScreenY - ele_frame.contentWindow.screenY - 33;
+	var container_y = ele_frame.contentWindow.mozInnerScreenY - ele_frame.contentWindow.screenY - 30;
 	if (obj) {
 		obj.ResizeWindow(container_x, container_y, ele_frame.contentWindow.innerWidth, ele_frame.contentWindow.innerHeight);
 	}
@@ -20,7 +20,7 @@ function open_a_file(file_name) {
 	var ret = -1;
 	var ele_frame = document.getElementById("main_frame");
 	var container_x = ele_frame.contentWindow.mozInnerScreenX - ele_frame.contentWindow.screenX - 10;
-	var container_y = ele_frame.contentWindow.mozInnerScreenY - ele_frame.contentWindow.screenY - 33;
+	var container_y = ele_frame.contentWindow.mozInnerScreenY - ele_frame.contentWindow.screenY - 30;
 	var baseWindow = window.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
                         .getInterface(Components.interfaces.nsIWebNavigation)
                         .QueryInterface(Components.interfaces.nsIDocShellTreeItem)

@@ -40,7 +40,7 @@ xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" persist="s
 <hbox flex="1">
 
 	<tree id="my-tree" flex="1"
-       datasources="rdf:files" ref="NC:FilesRoot" flags="dont-build-content" width="100">
+       datasources="rdf:files" ref="NC:FilesRoot" flags="dont-build-content" width="100" style="border: 0px">
 		<treecols>
     		<treecol id="Name" label="Name" primary="true" flex="1"/>
   		</treecols>
@@ -61,14 +61,15 @@ xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" persist="s
 
 	<vbox flex="8">
 		<vbox flex="10">
-			<tabbox id="t_box">
-				<tabs id="all_tabs" />
+			<tabbox id="t_box" style="border-bottom-style:solid;border-width:2px;border-color:rgb(109,109,109);">
+				<tabs id="all_tabs" >
+				</tabs>
 			</tabbox>
-			<iframe id="main_frame" flex="1" style="padding:0,margin:0"></iframe>
+			<iframe id="main_frame" flex="1" style="padding:0;margin:0px;border:none;"></iframe>
 		</vbox>
 		<splitter/>
 		<vbox flex="2">
-			<richlistbox id="message_box" flex="1" style="overflow-x: auto; overflow-y: auto;">
+			<richlistbox id="message_box" flex="1" style="overflow-x: auto; overflow-y: auto;border:none;">
   				<richlistitem>
     				<description>A XUL Description! </description>
   				</richlistitem>
@@ -80,6 +81,5 @@ xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" persist="s
 	</vbox>
 	
 </hbox>
-<button text="1" oncommand="on_test_observer_1()"/>
-<button text="2" oncommand="on_test_observer_2()"/>
+<statusbar/>
 </window>
