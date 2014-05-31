@@ -47,13 +47,13 @@
 							if (old_selected == this)
 								return;
 							this.setAttribute("selected", "true");
-							this.inner_box.style.backgroundImage="url('chrome://MonacoIDE/skin/default/editor/tab_selected.png')";
+							this.inner_box.style.backgroundImage="url('chrome://MonacoIDE/skin/default/editor/bg_selected.png')";
 							if (old_selected) {
-								old_selected.inner_box.style.backgroundImage="url('chrome://MonacoIDE/skin/default/editor/tab_normal.png')";
+								old_selected.inner_box.style.backgroundImage="url('chrome://MonacoIDE/skin/default/editor/bg_normal.png')";
 							}
 						}
 						else {
-							this.inner_box.style.backgroundImage="url('chrome://MonacoIDE/skin/default/editor/tab_normal.png')";
+							this.inner_box.style.backgroundImage="url('chrome://MonacoIDE/skin/default/editor/bg_normal.png')";
 							this.removeAttribute("selected");
 						}
 
@@ -144,7 +144,7 @@
 					if (this.selected){
 					}
 					else {
-						this.inner_box.style.backgroundImage="url('chrome://MonacoIDE/skin/default/editor/tab_hover.png')";
+						this.inner_box.style.backgroundImage="url('chrome://MonacoIDE/skin/default/editor/bg_hover.png')";
 					}
 				]]>
 			</handler>
@@ -155,7 +155,7 @@
 					if (this.selected){
 					}
 					else {
-						this.inner_box.style.backgroundImage="url('chrome://MonacoIDE/skin/default/editor/tab_normal.png')";
+						this.inner_box.style.backgroundImage="url('chrome://MonacoIDE/skin/default/editor/bg_normal.png')";
 					}
 				]]>
 			</handler>
