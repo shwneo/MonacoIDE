@@ -4,6 +4,7 @@ PWD = os.getcwd()
 MSVC_OPTIONS = ['/Zi','/nologo','/W3','/WX-','/O2','/Oi','/Oy-','/GL','/D"WIN32"','/D"NDEBUG"','/D"_UNICODE"','/D"_UNICODE"','/Gm-',
 				'/EHsc','/MD','/GS','/Gy','/DUNICODE','/fp:precise','/Zc:wchar_t']
 MSVC_DLL_OPTIONS = ['/D_WINDLL','/D_USRDLL']
+LINKING_OPTIONS = ['/MAP:"MonacoIDE.map"','/DEBUG','/PDB:"MonacoIDE.pdb"']
 Building_x86 = Environment(TARGET_ARCH='x86')
 BUILDING_OPTIONS = [MSVC_OPTIONS,MSVC_DLL_OPTIONS]
 SCINTILLA_DIR = PWD + '/code/scintilla/win32/'
@@ -29,6 +30,7 @@ Export('Building_x86')
 Export('BOOST_DIR')
 Export('SDK_PATH')
 Export('MSVC_DLL_OPTIONS')
+Export('LINKING_OPTIONS')
 
 
 SConscript([SCINTILLA_DIR + 'SConscript', 'code/tinyxml/SConscript', BOOST_DIR + 'SConscript', 'components/SConscript'])
