@@ -79,7 +79,8 @@ static bool need_execute(string & line_statement, AutoCompleteManagerPython * vm
 	regex reg_global_stage("^[0-9a-zA-Z_]+.*");
 	regex reg_sub_stage_start(".+:\\s*[\n\r]+$");
 	regex reg_sub_stage("^\\s+.+");
-	regex reg_empty_line("^\\s*[\n\r]+$");
+	regex reg_empty_line("^[\n\r]+$");
+	regex reg_empty_line_in_sub_stage("^\\s+[\n\r]+$");
 	regex reg_retrun_stage("^\\s*return[\\s+\\n].*");
 	int curr_pos = 0;
 	int curr_style;
@@ -113,6 +114,11 @@ static bool need_execute(string & line_statement, AutoCompleteManagerPython * vm
 	if ( regex_match( line_statement, reg_empty_line) ) {
 		cout<<"[python] new empty line"<<endl;
 		goto REJOIN;
+	}
+	if ( regex_match( line_statement, reg_empty_line_in_sub_stage) ) {
+		cout<<"[python] empyt line in sub statement, execute later..."<<endl;
+		vm->stage_buf += line_statement;
+		return false;
 	}
 	if ( regex_match( line_statement, reg_sub_stage) ) {
 		cout<<"[python] sub statement, execute later..."<<endl;
@@ -257,12 +263,27 @@ bool AutoCompleteManagerPython::ShowAutoComplete(char ch) {
 				if (evaluate_execute(buffered_line, this) != 0 ) {
 					cout<<"[python] TODO: handle running exceptions!"<<endl;
 					PyObject * err_type, * err_value, * err_traceback, * err_value_str, * err_type_str;
+					PyObject * err_type_class, * err_type_class_name;
 					PyErr_Fetch(&err_type, &err_value, &err_traceback);
 					err_value_str = PyObject_Str(err_value);
 					err_type_str  = PyObject_Str(err_type);
+					err_type_class_name = NULL;
 					char * str_message = PyString_AsString(err_value_str);
-					char * str_type = PyString_AsString(err_type_str);
+					if ( err_type ) {
+						err_type_class = PyObject_GetAttrString(err_type, "__name__");
+					}
+					char * str_type = "Unkown error type";
+					if ( err_type_class ) {
+						str_type = PyString_AsString(err_type_class);
+					}
+					
 					ReportToMessageBox(line_num, str_type, str_message);
+					Py_DECREF(err_type);
+					Py_DECREF(err_value);
+					Py_DECREF(err_traceback);
+					Py_DECREF(err_value_str);
+					Py_DECREF(err_type_str);
+					Py_DECREF(err_type_class_name);
 				}
 			}
 			
