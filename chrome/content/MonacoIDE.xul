@@ -50,7 +50,7 @@ xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" persist="s
         		<treechildren>
          			<treeitem uri="rdf:*">
             			<treerow>
-             				<treecell label="rdf:http://home.netscape.com/NC-rdf#Name"/>
+             				<treecell label="rdf:http://home.netscape.com/NC-rdf#Name" src="rdf:http://home.netscape.com/NC-rdf#Icon"/>
             			</treerow>
           			</treeitem>
         		</treechildren>
